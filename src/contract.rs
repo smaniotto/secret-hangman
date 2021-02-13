@@ -3,7 +3,7 @@ use cosmwasm_std::{
     StdResult, Storage,
 };
 
-use crate::msg::{CountResponse, HandleMsg, InitMsg, QueryMsg};
+use crate::msg::{HandleMsg, InitMsg, QueryMsg, WordLengthResponse};
 use crate::state::{config, config_read, State};
 
 pub fn init<S: Storage, A: Api, Q: Querier>(
@@ -66,20 +66,22 @@ pub fn query<S: Storage, A: Api, Q: Querier>(
     msg: QueryMsg,
 ) -> StdResult<Binary> {
     match msg {
-        QueryMsg::GetCount {} => to_binary(&query_count(deps)?),
+        QueryMsg::GetWordLength {} => to_binary(&query_word_length(deps)?),
     }
 }
 
-fn query_count<S: Storage, A: Api, Q: Querier>(deps: &Extern<S, A, Q>) -> StdResult<CountResponse> {
+fn query_word_length<S: Storage, A: Api, Q: Querier>(
+    deps: &Extern<S, A, Q>
+) -> StdResult<WordLengthResponse> {
     let state = config_read(&deps.storage).load()?;
-    Ok(CountResponse { count: state.remaining_guesses as i32 })
+    Ok(WordLengthResponse { word_length: state.word.chars().count() as u8 })
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
     use cosmwasm_std::testing::{mock_dependencies, mock_env};
-    use cosmwasm_std::{coins, from_binary, StdError};
+    use cosmwasm_std::{coins, from_binary};
 
     #[test]
     fn proper_initialization() {
@@ -93,55 +95,21 @@ mod tests {
         assert_eq!(0, res.messages.len());
 
         // it worked, let's query the state
-        let res = query(&deps, QueryMsg::GetCount {}).unwrap();
-        let value: CountResponse = from_binary(&res).unwrap();
-        assert_eq!(5, value.count);
+        let res = query(&deps, QueryMsg::GetWordLength {}).unwrap();
+        let value: WordLengthResponse = from_binary(&res).unwrap();
+        assert_eq!(6, value.word_length);
     }
 
     #[test]
-    fn increment() {
+    fn test_query_word_length() {
         let mut deps = mock_dependencies(20, &coins(2, "token"));
 
         let msg = InitMsg {};
         let env = mock_env("creator", &coins(2, "token"));
         let _res = init(&mut deps, env, msg).unwrap();
 
-        // anyone can increment
-        let env = mock_env("anyone", &coins(2, "token"));
-        let msg = HandleMsg::Increment {};
-        let _res = handle(&mut deps, env, msg).unwrap();
-
-        // should increase counter by 1
-        let res = query(&deps, QueryMsg::GetCount {}).unwrap();
-        let value: CountResponse = from_binary(&res).unwrap();
-        assert_eq!(4, value.count);
-    }
-
-    #[test]
-    fn reset() {
-        let mut deps = mock_dependencies(20, &coins(2, "token"));
-
-        let msg = InitMsg {};
-        let env = mock_env("creator", &coins(2, "token"));
-        let _res = init(&mut deps, env, msg).unwrap();
-
-        // not anyone can reset
-        let unauth_env = mock_env("anyone", &coins(2, "token"));
-        let msg = HandleMsg::Reset { count: 5 };
-        let res = handle(&mut deps, unauth_env, msg);
-        match res {
-            Err(StdError::Unauthorized { .. }) => {}
-            _ => panic!("Must return unauthorized error"),
-        }
-
-        // only the original creator can reset the counter
-        let auth_env = mock_env("creator", &coins(2, "token"));
-        let msg = HandleMsg::Reset { count: 5 };
-        let _res = handle(&mut deps, auth_env, msg).unwrap();
-
-        // should now be 5
-        let res = query(&deps, QueryMsg::GetCount {}).unwrap();
-        let value: CountResponse = from_binary(&res).unwrap();
-        assert_eq!(5, value.count);
+        let res = query(&deps, QueryMsg::GetWordLength {}).unwrap();
+        let value: WordLengthResponse = from_binary(&res).unwrap();
+        assert_eq!(6, value.word_length);
     }
 }
