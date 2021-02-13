@@ -3,16 +3,21 @@
   "title": "State",
   "type": "object",
   "required": [
-    "count",
-    "owner"
+    "player",
+    "remaining_guesses",
+    "word"
   ],
   "properties": {
-    "count": {
-      "type": "integer",
-      "format": "int32"
-    },
-    "owner": {
+    "player": {
       "$ref": "#/definitions/CanonicalAddr"
+    },
+    "remaining_guesses": {
+      "type": "integer",
+      "format": "uint8",
+      "minimum": 0.0
+    },
+    "word": {
+      "type": "string"
     }
   },
   "definitions": {
