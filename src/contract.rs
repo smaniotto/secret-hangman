@@ -3,7 +3,9 @@ use cosmwasm_std::{
     StdResult, Storage,
 };
 
-use crate::msg::{HandleMsg, InitMsg, QueryMsg, WordLengthResponse};
+use crate::msg::{
+    HandleMsg, InitMsg, QueryMsg, WordLengthResponse, RemainingGuessesResponse
+};
 use crate::state::{config, config_read, State};
 
 pub fn init<S: Storage, A: Api, Q: Querier>(
@@ -67,6 +69,7 @@ pub fn query<S: Storage, A: Api, Q: Querier>(
 ) -> StdResult<Binary> {
     match msg {
         QueryMsg::GetWordLength {} => to_binary(&query_word_length(deps)?),
+        QueryMsg::GetRemainingGuesses {} => to_binary(&query_remaining_guesses(deps)?),
     }
 }
 
@@ -75,6 +78,13 @@ fn query_word_length<S: Storage, A: Api, Q: Querier>(
 ) -> StdResult<WordLengthResponse> {
     let state = config_read(&deps.storage).load()?;
     Ok(WordLengthResponse { word_length: state.word.chars().count() as u8 })
+}
+
+fn query_remaining_guesses<S: Storage, A: Api, Q: Querier>(
+    deps: &Extern<S, A, Q>
+) -> StdResult<RemainingGuessesResponse> {
+    let state = config_read(&deps.storage).load()?;
+    Ok(RemainingGuessesResponse { remaining_guesses: state.remaining_guesses as u8 })
 }
 
 #[cfg(test)]
@@ -111,5 +121,18 @@ mod tests {
         let res = query(&deps, QueryMsg::GetWordLength {}).unwrap();
         let value: WordLengthResponse = from_binary(&res).unwrap();
         assert_eq!(6, value.word_length);
+    }
+
+    #[test]
+    fn test_remaining_guesses() {
+        let mut deps = mock_dependencies(20, &coins(2, "token"));
+
+        let msg = InitMsg {};
+        let env = mock_env("creator", &coins(2, "token"));
+        let _res = init(&mut deps, env, msg).unwrap();
+
+        let res = query(&deps, QueryMsg::GetRemainingGuesses {}).unwrap();
+        let value: RemainingGuessesResponse = from_binary(&res).unwrap();
+        assert_eq!(5, value.remaining_guesses);
     }
 }

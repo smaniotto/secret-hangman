@@ -12,6 +12,17 @@
           "type": "object"
         }
       }
+    },
+    {
+      "type": "object",
+      "required": [
+        "get_remaining_guesses"
+      ],
+      "properties": {
+        "get_remaining_guesses": {
+          "type": "object"
+        }
+      }
     }
   ]
 }
