@@ -1,3 +1,5 @@
+use std::char;
+
 use cosmwasm_std::{
     to_binary, Api, Binary, Env, Extern, HandleResponse, InitResponse, Querier, StdError,
     StdResult, Storage,
@@ -30,36 +32,36 @@ pub fn handle<S: Storage, A: Api, Q: Querier>(
     msg: HandleMsg,
 ) -> StdResult<HandleResponse> {
     match msg {
-        HandleMsg::Increment {} => try_increment(deps, env),
-        HandleMsg::Reset { count } => try_reset(deps, env, count),
+        HandleMsg::GuessLetter { letter } => try_guess_letter(deps, env, letter)
     }
 }
 
-pub fn try_increment<S: Storage, A: Api, Q: Querier>(
-    deps: &mut Extern<S, A, Q>,
-    _env: Env,
-) -> StdResult<HandleResponse> {
-    config(&mut deps.storage).update(|mut state| {
-        state.remaining_guesses -= 1;
-        Ok(state)
-    })?;
-
-    Ok(HandleResponse::default())
-}
-
-pub fn try_reset<S: Storage, A: Api, Q: Querier>(
+pub fn try_guess_letter<S: Storage, A: Api, Q: Querier>(
     deps: &mut Extern<S, A, Q>,
     env: Env,
-    count: i32,
+    letter: u32,
 ) -> StdResult<HandleResponse> {
     let sender_address_raw = deps.api.canonical_address(&env.message.sender)?;
     config(&mut deps.storage).update(|mut state| {
         if sender_address_raw != state.player {
             return Err(StdError::Unauthorized { backtrace: None });
         }
-        state.remaining_guesses = count as u8;
+
+        if state.remaining_guesses <= 0 {
+            return Err(StdError::GenericErr { 
+                msg: String::from("You're out of guesses"),
+                backtrace: None,
+            });
+        }
+
+        let letter_char = char::from_u32(letter).unwrap();
+        if !state.word.contains(letter_char) {
+            state.remaining_guesses -= 1;
+        }
+
         Ok(state)
     })?;
+
     Ok(HandleResponse::default())
 }
 
@@ -124,7 +126,7 @@ mod tests {
     }
 
     #[test]
-    fn test_remaining_guesses() {
+    fn test_query_remaining_guesses() {
         let mut deps = mock_dependencies(20, &coins(2, "token"));
 
         let msg = InitMsg {};
@@ -134,5 +136,73 @@ mod tests {
         let res = query(&deps, QueryMsg::GetRemainingGuesses {}).unwrap();
         let value: RemainingGuessesResponse = from_binary(&res).unwrap();
         assert_eq!(5, value.remaining_guesses);
+    }
+
+    #[test]
+    fn test_handle_guess_letter() {
+        let mut deps = mock_dependencies(20, &coins(2, "token"));
+
+        let msg = InitMsg {};
+        let env = mock_env("creator", &coins(2, "token"));
+        let _res = init(&mut deps, env, msg).unwrap();
+
+        // should block other people from sending commands
+        let msg = HandleMsg::GuessLetter { letter: 'e' as u32 };
+        let env = mock_env("another", &coins(100_000_000, "uscrt"));
+        let res = handle(&mut deps, env, msg);
+        match res {
+            Err(StdError::Unauthorized { .. }) => {},
+            _ => panic!("Only the original player can guess"),
+        }
+
+        // should maintain number of remaining guesses if write
+        let msg = HandleMsg::GuessLetter { letter: 'b' as u32 };
+        let env = mock_env("creator", &coins(100_000_000, "uscrt"));
+        let _res = handle(&mut deps, env, msg);
+
+        let res = query(&deps, QueryMsg::GetRemainingGuesses {}).unwrap();
+        let value: RemainingGuessesResponse = from_binary(&res).unwrap();
+        assert_eq!(5, value.remaining_guesses);
+
+        // should decrease remaining guesses if wrong
+        let msg = HandleMsg::GuessLetter { letter: 'c' as u32 };
+        let env = mock_env("creator", &coins(100_000_000, "uscrt"));
+        let _res = handle(&mut deps, env, msg);
+
+        let res = query(&deps, QueryMsg::GetRemainingGuesses {}).unwrap();
+        let value: RemainingGuessesResponse = from_binary(&res).unwrap();
+        assert_eq!(4, value.remaining_guesses);
+
+        // should block guesses if no remaining guess
+        let msg = HandleMsg::GuessLetter { letter: 'd' as u32 };
+        let env = mock_env("creator", &coins(100_000_000, "uscrt"));
+        let _res = handle(&mut deps, env, msg);
+
+        let msg = HandleMsg::GuessLetter { letter: 'f' as u32 };
+        let env = mock_env("creator", &coins(100_000_000, "uscrt"));
+        let _res = handle(&mut deps, env, msg);
+
+        let msg = HandleMsg::GuessLetter { letter: 'g' as u32 };
+        let env = mock_env("creator", &coins(100_000_000, "uscrt"));
+        let _res = handle(&mut deps, env, msg);
+
+        let msg = HandleMsg::GuessLetter { letter: 'h' as u32 };
+        let env = mock_env("creator", &coins(100_000_000, "uscrt"));
+        let res = handle(&mut deps, env, msg);
+        match res {
+            Err(StdError::GenericErr { .. }) => panic!("User should have one more guess"),
+            _ => {},
+        };
+
+        let msg = HandleMsg::GuessLetter { letter: 'c' as u32 };
+        let env = mock_env("creator", &coins(100_000_000, "uscrt"));
+        let res = handle(&mut deps, env, msg);
+        match res {
+            Err(StdError::GenericErr { .. }) => {},
+            _ => panic!("User shouldn't have any more guesses"),
+        };
+        let res = query(&deps, QueryMsg::GetRemainingGuesses {}).unwrap();
+        let value: RemainingGuessesResponse = from_binary(&res).unwrap();
+        assert_eq!(0, value.remaining_guesses);
     }
 }

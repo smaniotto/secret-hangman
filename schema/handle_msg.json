@@ -5,29 +5,19 @@
     {
       "type": "object",
       "required": [
-        "increment"
+        "guess_letter"
       ],
       "properties": {
-        "increment": {
-          "type": "object"
-        }
-      }
-    },
-    {
-      "type": "object",
-      "required": [
-        "reset"
-      ],
-      "properties": {
-        "reset": {
+        "guess_letter": {
           "type": "object",
           "required": [
-            "count"
+            "letter"
           ],
           "properties": {
-            "count": {
+            "letter": {
               "type": "integer",
-              "format": "int32"
+              "format": "uint32",
+              "minimum": 0.0
             }
           }
         }
