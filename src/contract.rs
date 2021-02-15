@@ -4,27 +4,47 @@ use cosmwasm_std::{
     to_binary, Api, Binary, Env, Extern, HandleResponse, InitResponse, Querier, StdError,
     StdResult, Storage,
 };
+use rand::{RngCore, SeedableRng};
+use rand_chacha::ChaChaRng;
+use sha2::{Digest, Sha256};
 
+use crate::wordlist::WORDLIST;
 use crate::msg::{
     HandleMsg, InitMsg, QueryMsg, WordLengthResponse, RemainingGuessesResponse
 };
 use crate::state::{config, config_read, State};
 
+
+// -------- Init --------
+
 pub fn init<S: Storage, A: Api, Q: Querier>(
     deps: &mut Extern<S, A, Q>,
     env: Env,
-    _msg: InitMsg,
+    msg: InitMsg,
 ) -> StdResult<InitResponse> {
-    let state = State {
-        player: deps.api.canonical_address(&env.message.sender)?,
-        word: String::from("banana"),
-        remaining_guesses: 5,
-    };
+    match msg {
+        InitMsg { seed } => {
+            let state = State {
+                player: deps.api.canonical_address(&env.message.sender)?,
+                word: random_word(seed),
+                remaining_guesses: 5,
+            };
 
-    config(&mut deps.storage).save(&state)?;
-
+            config(&mut deps.storage).save(&state)?;
+        }
+    }
     Ok(InitResponse::default())
 }
+
+pub fn random_word(seed: u64) -> String {
+    let seed: [u8; 32] = Sha256::digest(&seed.to_be_bytes()).into();
+    let mut rng = ChaChaRng::from_seed(seed);
+    let index = (rng.next_u32() % (WORDLIST.len() as u32)) as usize;
+    String::from(WORDLIST[index])
+}
+
+
+// -------- Handle --------
 
 pub fn handle<S: Storage, A: Api, Q: Querier>(
     deps: &mut Extern<S, A, Q>,
@@ -65,6 +85,9 @@ pub fn try_guess_letter<S: Storage, A: Api, Q: Querier>(
     Ok(HandleResponse::default())
 }
 
+
+// -------- Query --------
+
 pub fn query<S: Storage, A: Api, Q: Querier>(
     deps: &Extern<S, A, Q>,
     msg: QueryMsg,
@@ -89,6 +112,9 @@ fn query_remaining_guesses<S: Storage, A: Api, Q: Querier>(
     Ok(RemainingGuessesResponse { remaining_guesses: state.remaining_guesses as u8 })
 }
 
+
+// -------- Tests --------
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -99,7 +125,7 @@ mod tests {
     fn proper_initialization() {
         let mut deps = mock_dependencies(20, &[]);
 
-        let msg = InitMsg {};
+        let msg = InitMsg { seed: 1 }; // random word: harvest
         let env = mock_env("creator", &coins(1000, "earth"));
 
         // we can just call .unwrap() to assert this was a success
@@ -109,27 +135,27 @@ mod tests {
         // it worked, let's query the state
         let res = query(&deps, QueryMsg::GetWordLength {}).unwrap();
         let value: WordLengthResponse = from_binary(&res).unwrap();
-        assert_eq!(6, value.word_length);
+        assert_eq!(7, value.word_length);
     }
 
     #[test]
     fn test_query_word_length() {
         let mut deps = mock_dependencies(20, &coins(2, "token"));
 
-        let msg = InitMsg {};
+        let msg = InitMsg { seed: 1 }; // random word: harvest
         let env = mock_env("creator", &coins(2, "token"));
         let _res = init(&mut deps, env, msg).unwrap();
 
         let res = query(&deps, QueryMsg::GetWordLength {}).unwrap();
         let value: WordLengthResponse = from_binary(&res).unwrap();
-        assert_eq!(6, value.word_length);
+        assert_eq!(7, value.word_length);
     }
 
     #[test]
     fn test_query_remaining_guesses() {
         let mut deps = mock_dependencies(20, &coins(2, "token"));
 
-        let msg = InitMsg {};
+        let msg = InitMsg { seed: 1 };
         let env = mock_env("creator", &coins(2, "token"));
         let _res = init(&mut deps, env, msg).unwrap();
 
@@ -142,7 +168,7 @@ mod tests {
     fn test_handle_guess_letter() {
         let mut deps = mock_dependencies(20, &coins(2, "token"));
 
-        let msg = InitMsg {};
+        let msg = InitMsg { seed: 1 }; // random word: harvest
         let env = mock_env("creator", &coins(2, "token"));
         let _res = init(&mut deps, env, msg).unwrap();
 
@@ -156,7 +182,7 @@ mod tests {
         }
 
         // should maintain number of remaining guesses if write
-        let msg = HandleMsg::GuessLetter { letter: 'b' as u32 };
+        let msg = HandleMsg::GuessLetter { letter: 'h' as u32 };
         let env = mock_env("creator", &coins(100_000_000, "uscrt"));
         let _res = handle(&mut deps, env, msg);
 
@@ -186,7 +212,7 @@ mod tests {
         let env = mock_env("creator", &coins(100_000_000, "uscrt"));
         let _res = handle(&mut deps, env, msg);
 
-        let msg = HandleMsg::GuessLetter { letter: 'h' as u32 };
+        let msg = HandleMsg::GuessLetter { letter: 'i' as u32 };
         let env = mock_env("creator", &coins(100_000_000, "uscrt"));
         let res = handle(&mut deps, env, msg);
         match res {
@@ -194,7 +220,7 @@ mod tests {
             _ => {},
         };
 
-        let msg = HandleMsg::GuessLetter { letter: 'c' as u32 };
+        let msg = HandleMsg::GuessLetter { letter: 'j' as u32 };
         let env = mock_env("creator", &coins(100_000_000, "uscrt"));
         let res = handle(&mut deps, env, msg);
         match res {
@@ -204,5 +230,10 @@ mod tests {
         let res = query(&deps, QueryMsg::GetRemainingGuesses {}).unwrap();
         let value: RemainingGuessesResponse = from_binary(&res).unwrap();
         assert_eq!(0, value.remaining_guesses);
+    }
+
+    #[test]
+    fn test_random_word() {
+        assert_eq!("harvest", random_word(1));
     }
 }
