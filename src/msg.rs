@@ -13,18 +13,13 @@ pub enum HandleMsg {
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum QueryMsg {
-    // GetCount returns the current count as a json-encoded number
-    GetWordLength {},
-    GetRemainingGuesses {},
+    GetStatus {},
 }
 
 // We define a custom struct for each query response
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
-pub struct WordLengthResponse {
+pub struct StatusResponse {
     pub word_length: u8,
-}
-
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
-pub struct RemainingGuessesResponse {
     pub remaining_guesses: u8,
+    pub word_reveal: String,
 }

@@ -5,7 +5,9 @@
   "required": [
     "player",
     "remaining_guesses",
-    "word"
+    "word",
+    "word_length",
+    "word_reveal"
   ],
   "properties": {
     "player": {
@@ -17,6 +19,14 @@
       "minimum": 0.0
     },
     "word": {
+      "type": "string"
+    },
+    "word_length": {
+      "type": "integer",
+      "format": "uint8",
+      "minimum": 0.0
+    },
+    "word_reveal": {
       "type": "string"
     }
   },

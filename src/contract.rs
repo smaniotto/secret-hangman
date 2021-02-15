@@ -10,7 +10,7 @@ use sha2::{Digest, Sha256};
 
 use crate::wordlist::WORDLIST;
 use crate::msg::{
-    HandleMsg, InitMsg, QueryMsg, WordLengthResponse, RemainingGuessesResponse
+    HandleMsg, InitMsg, QueryMsg, StatusResponse
 };
 use crate::state::{config, config_read, State};
 
@@ -24,9 +24,13 @@ pub fn init<S: Storage, A: Api, Q: Querier>(
 ) -> StdResult<InitResponse> {
     match msg {
         InitMsg { seed } => {
+            let word = random_word(seed);
+            let word_length = word.chars().count();
             let state = State {
                 player: deps.api.canonical_address(&env.message.sender)?,
-                word: random_word(seed),
+                word: word,
+                word_length: word_length as u8,
+                word_reveal: "_".repeat(word_length),
                 remaining_guesses: 5,
             };
 
@@ -77,6 +81,17 @@ pub fn try_guess_letter<S: Storage, A: Api, Q: Querier>(
         let letter_char = char::from_u32(letter).unwrap();
         if !state.word.contains(letter_char) {
             state.remaining_guesses -= 1;
+        } else {
+            let mut updated_word_reveal = state.word_reveal.into_bytes();
+            for (i, c) in state.word.chars().enumerate() {
+                if c == letter_char {
+                    updated_word_reveal[i] = c as u8;
+                }
+            }
+            match String::from_utf8(updated_word_reveal) {
+                Ok(w) => state.word_reveal = w,
+                Err(..) => panic!(String::from("Can't create word reveal from guess")),
+            }
         }
 
         Ok(state)
@@ -93,25 +108,21 @@ pub fn query<S: Storage, A: Api, Q: Querier>(
     msg: QueryMsg,
 ) -> StdResult<Binary> {
     match msg {
-        QueryMsg::GetWordLength {} => to_binary(&query_word_length(deps)?),
-        QueryMsg::GetRemainingGuesses {} => to_binary(&query_remaining_guesses(deps)?),
+        QueryMsg::GetStatus {} => to_binary(&query_status(deps)?),
+        _ => Ok(Binary::default()),
     }
 }
 
-fn query_word_length<S: Storage, A: Api, Q: Querier>(
+fn query_status<S: Storage, A: Api, Q: Querier>(
     deps: &Extern<S, A, Q>
-) -> StdResult<WordLengthResponse> {
+) -> StdResult<StatusResponse> {
     let state = config_read(&deps.storage).load()?;
-    Ok(WordLengthResponse { word_length: state.word.chars().count() as u8 })
+    Ok(StatusResponse {
+        word_length: state.word.chars().count() as u8,
+        remaining_guesses: state.remaining_guesses as u8,
+        word_reveal: state.word_reveal,
+    })
 }
-
-fn query_remaining_guesses<S: Storage, A: Api, Q: Querier>(
-    deps: &Extern<S, A, Q>
-) -> StdResult<RemainingGuessesResponse> {
-    let state = config_read(&deps.storage).load()?;
-    Ok(RemainingGuessesResponse { remaining_guesses: state.remaining_guesses as u8 })
-}
-
 
 // -------- Tests --------
 
@@ -133,35 +144,24 @@ mod tests {
         assert_eq!(0, res.messages.len());
 
         // it worked, let's query the state
-        let res = query(&deps, QueryMsg::GetWordLength {}).unwrap();
-        let value: WordLengthResponse = from_binary(&res).unwrap();
+        let res = query(&deps, QueryMsg::GetStatus {}).unwrap();
+        let value: StatusResponse = from_binary(&res).unwrap();
         assert_eq!(7, value.word_length);
     }
 
     #[test]
-    fn test_query_word_length() {
+    fn test_query_status() {
         let mut deps = mock_dependencies(20, &coins(2, "token"));
 
         let msg = InitMsg { seed: 1 }; // random word: harvest
         let env = mock_env("creator", &coins(2, "token"));
         let _res = init(&mut deps, env, msg).unwrap();
 
-        let res = query(&deps, QueryMsg::GetWordLength {}).unwrap();
-        let value: WordLengthResponse = from_binary(&res).unwrap();
+        let res = query(&deps, QueryMsg::GetStatus {}).unwrap();
+        let value: StatusResponse = from_binary(&res).unwrap();
         assert_eq!(7, value.word_length);
-    }
-
-    #[test]
-    fn test_query_remaining_guesses() {
-        let mut deps = mock_dependencies(20, &coins(2, "token"));
-
-        let msg = InitMsg { seed: 1 };
-        let env = mock_env("creator", &coins(2, "token"));
-        let _res = init(&mut deps, env, msg).unwrap();
-
-        let res = query(&deps, QueryMsg::GetRemainingGuesses {}).unwrap();
-        let value: RemainingGuessesResponse = from_binary(&res).unwrap();
         assert_eq!(5, value.remaining_guesses);
+        assert_eq!(String::from("_______"), value.word_reveal);
     }
 
     #[test]
@@ -186,8 +186,8 @@ mod tests {
         let env = mock_env("creator", &coins(100_000_000, "uscrt"));
         let _res = handle(&mut deps, env, msg);
 
-        let res = query(&deps, QueryMsg::GetRemainingGuesses {}).unwrap();
-        let value: RemainingGuessesResponse = from_binary(&res).unwrap();
+        let res = query(&deps, QueryMsg::GetStatus {}).unwrap();
+        let value: StatusResponse = from_binary(&res).unwrap();
         assert_eq!(5, value.remaining_guesses);
 
         // should decrease remaining guesses if wrong
@@ -195,8 +195,8 @@ mod tests {
         let env = mock_env("creator", &coins(100_000_000, "uscrt"));
         let _res = handle(&mut deps, env, msg);
 
-        let res = query(&deps, QueryMsg::GetRemainingGuesses {}).unwrap();
-        let value: RemainingGuessesResponse = from_binary(&res).unwrap();
+        let res = query(&deps, QueryMsg::GetStatus {}).unwrap();
+        let value: StatusResponse = from_binary(&res).unwrap();
         assert_eq!(4, value.remaining_guesses);
 
         // should block guesses if no remaining guess
@@ -227,8 +227,8 @@ mod tests {
             Err(StdError::GenericErr { .. }) => {},
             _ => panic!("User shouldn't have any more guesses"),
         };
-        let res = query(&deps, QueryMsg::GetRemainingGuesses {}).unwrap();
-        let value: RemainingGuessesResponse = from_binary(&res).unwrap();
+        let res = query(&deps, QueryMsg::GetStatus {}).unwrap();
+        let value: StatusResponse = from_binary(&res).unwrap();
         assert_eq!(0, value.remaining_guesses);
     }
 

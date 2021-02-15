@@ -10,6 +10,8 @@ pub static CONFIG_KEY: &[u8] = b"config";
 pub struct State {
     pub player: CanonicalAddr,
     pub word: String,
+    pub word_length: u8,
+    pub word_reveal: String,
     pub remaining_guesses: u8,
 }
 
