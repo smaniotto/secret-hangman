@@ -8,6 +8,7 @@ pub struct InitMsg {}
 #[serde(rename_all = "snake_case")]
 pub enum HandleMsg {
     GuessLetter { letter: u32 },
+    Restart {},
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]

@@ -22,6 +22,17 @@
           }
         }
       }
+    },
+    {
+      "type": "object",
+      "required": [
+        "restart"
+      ],
+      "properties": {
+        "restart": {
+          "type": "object"
+        }
+      }
     }
   ]
 }

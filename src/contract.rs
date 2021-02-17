@@ -31,6 +31,7 @@ pub fn init<S: Storage, A: Api, Q: Querier>(
         word_length: word_length as u8,
         word_reveal: "_".repeat(word_length),
         remaining_guesses: 5,
+        winner: false,
     };
 
     config(&mut deps.storage).save(&state)?;
@@ -59,7 +60,8 @@ pub fn handle<S: Storage, A: Api, Q: Querier>(
     msg: HandleMsg,
 ) -> StdResult<HandleResponse> {
     match msg {
-        HandleMsg::GuessLetter { letter } => try_guess_letter(deps, env, letter)
+        HandleMsg::GuessLetter { letter } => try_guess_letter(deps, env, letter),
+        HandleMsg::Restart {} => try_restart(deps, env),
     }
 }
 
@@ -94,8 +96,43 @@ pub fn try_guess_letter<S: Storage, A: Api, Q: Querier>(
             match String::from_utf8(updated_word_reveal) {
                 Ok(w) => state.word_reveal = w,
                 Err(..) => panic!(String::from("Can't create word reveal from guess")),
+            };
+
+            if !state.word_reveal.contains("_") {
+                state.winner = true;
             }
         }
+
+        Ok(state)
+    })?;
+
+    Ok(HandleResponse::default())
+}
+
+pub fn try_restart<S: Storage, A: Api, Q: Querier>(
+    deps: &mut Extern<S, A, Q>,
+    env: Env,
+) -> StdResult<HandleResponse> {
+    let sender_address_raw = deps.api.canonical_address(&env.message.sender)?;
+    config(&mut deps.storage).update(|mut state| {
+        if sender_address_raw != state.player {
+            return Err(StdError::Unauthorized { backtrace: None });
+        }
+
+        if !state.winner {
+            return Err(StdError::GenericErr { 
+                msg: String::from("Can't start a new round before guessing the word"),
+                backtrace: None,
+            });
+        }
+
+        let seed = generate_seed(&env);
+        let new_word = random_word(seed);
+        let word_length = new_word.chars().count();
+        state.word_length = word_length as u8;
+        state.word_reveal = "_".repeat(word_length);
+        state.remaining_guesses = 5;
+        state.winner = false;
 
         Ok(state)
     })?;
@@ -246,5 +283,65 @@ mod tests {
     #[test]
     fn test_random_word() {
         assert_eq!("harvest", random_word(1));
+    }
+
+    #[test]
+    fn test_restart() {
+        let mut deps = mock_dependencies(20, &coins(2, "token"));
+
+        let msg = InitMsg {};
+        let mut env = mock_env("creator", &coins(2, "token"));
+        // generate seed for random word: daybed
+        env.block.height = 1;
+        env.block.time = 2;
+        let _res = init(&mut deps, env, msg).unwrap();
+
+        // should block other people from sending restart commands
+        let msg = HandleMsg::Restart {};
+        let env = mock_env("another", &coins(100_000_000, "uscrt"));
+        let res = handle(&mut deps, env, msg);
+        match res {
+            Err(StdError::Unauthorized { .. }) => {},
+            _ => panic!("Only the original player can guess"),
+        }
+
+        // should allow to restart only if has guessed previous word
+        let msg = HandleMsg::Restart {};
+        let env = mock_env("creator", &coins(100_000_000, "uscrt"));
+        let res = handle(&mut deps, env, msg);
+        match res {
+            Err(StdError::GenericErr { .. }) => {},
+            _ => panic!("User shouldn't be allowed to restart"),
+        }
+
+        // should allow to restart after guess
+        let msg = HandleMsg::GuessLetter { letter: 'd' as u32 };
+        let env = mock_env("creator", &coins(100_000_000, "uscrt"));
+        let _res = handle(&mut deps, env, msg);
+        let msg = HandleMsg::GuessLetter { letter: 'a' as u32 };
+        let env = mock_env("creator", &coins(100_000_000, "uscrt"));
+        let _res = handle(&mut deps, env, msg);
+        let msg = HandleMsg::GuessLetter { letter: 'y' as u32 };
+        let env = mock_env("creator", &coins(100_000_000, "uscrt"));
+        let _res = handle(&mut deps, env, msg);
+        let msg = HandleMsg::GuessLetter { letter: 'b' as u32 };
+        let env = mock_env("creator", &coins(100_000_000, "uscrt"));
+        let _res = handle(&mut deps, env, msg);
+        let msg = HandleMsg::GuessLetter { letter: 'x' as u32 };
+        let env = mock_env("creator", &coins(100_000_000, "uscrt"));
+        let _res = handle(&mut deps, env, msg);
+        let msg = HandleMsg::GuessLetter { letter: 'e' as u32 };
+        let env = mock_env("creator", &coins(100_000_000, "uscrt"));
+        let _res = handle(&mut deps, env, msg);
+        let res = query(&deps, QueryMsg::GetStatus {}).unwrap();
+        let value: StatusResponse = from_binary(&res).unwrap();
+        assert_eq!(4, value.remaining_guesses);
+
+        let msg = HandleMsg::Restart {};
+        let env = mock_env("creator", &coins(100_000_000, "uscrt"));
+        let _res = handle(&mut deps, env, msg);
+        let res = query(&deps, QueryMsg::GetStatus {}).unwrap();
+        let value: StatusResponse = from_binary(&res).unwrap();
+        assert_eq!(5, value.remaining_guesses);
     }
 }

@@ -13,6 +13,7 @@ pub struct State {
     pub word_length: u8,
     pub word_reveal: String,
     pub remaining_guesses: u8,
+    pub winner: bool,
 }
 
 pub fn config<S: Storage>(storage: &mut S) -> Singleton<S, State> {
