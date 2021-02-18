@@ -11,9 +11,15 @@ pub struct State {
     pub player: CanonicalAddr,
     pub word: String,
     pub word_length: u8,
-    pub word_reveal: String,
+    pub word_reveal: Vec<LetterReveal>,
     pub remaining_guesses: u8,
     pub winner: bool,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+pub struct LetterReveal {
+    pub letter: u8,
+    pub position: u8,
 }
 
 pub fn config<S: Storage>(storage: &mut S) -> Singleton<S, State> {

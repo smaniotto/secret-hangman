@@ -12,7 +12,7 @@ use crate::wordlist::WORDLIST;
 use crate::msg::{
     HandleMsg, InitMsg, QueryMsg, StatusResponse
 };
-use crate::state::{config, config_read, State};
+use crate::state::{config, config_read, State, LetterReveal};
 
 
 // -------- Init --------
@@ -29,7 +29,7 @@ pub fn init<S: Storage, A: Api, Q: Querier>(
         player: deps.api.canonical_address(&env.message.sender)?,
         word: word,
         word_length: word_length as u8,
-        word_reveal: "_".repeat(word_length),
+        word_reveal: vec![],
         remaining_guesses: 5,
         winner: false,
     };
@@ -87,18 +87,16 @@ pub fn try_guess_letter<S: Storage, A: Api, Q: Querier>(
         if !state.word.contains(letter_char) {
             state.remaining_guesses -= 1;
         } else {
-            let mut updated_word_reveal = state.word_reveal.into_bytes();
             for (i, c) in state.word.chars().enumerate() {
                 if c == letter_char {
-                    updated_word_reveal[i] = c as u8;
+                    state.word_reveal.push(LetterReveal {
+                        letter: c as u8,
+                        position: i as u8,
+                    });
                 }
             }
-            match String::from_utf8(updated_word_reveal) {
-                Ok(w) => state.word_reveal = w,
-                Err(..) => panic!(String::from("Can't create word reveal from guess")),
-            };
 
-            if !state.word_reveal.contains("_") {
+            if (state.word_reveal.len() as u8) == state.word_length {
                 state.winner = true;
             }
         }
@@ -130,7 +128,7 @@ pub fn try_restart<S: Storage, A: Api, Q: Querier>(
         let new_word = random_word(seed);
         let word_length = new_word.chars().count();
         state.word_length = word_length as u8;
-        state.word_reveal = "_".repeat(word_length);
+        state.word_reveal = vec![];
         state.remaining_guesses = 5;
         state.winner = false;
 
@@ -206,7 +204,7 @@ mod tests {
         let value: StatusResponse = from_binary(&res).unwrap();
         assert_eq!(6, value.word_length);
         assert_eq!(5, value.remaining_guesses);
-        assert_eq!(String::from("______"), value.word_reveal);
+        assert_eq!(vec![] as Vec<LetterReveal>, value.word_reveal);
     }
 
     #[test]
@@ -237,6 +235,7 @@ mod tests {
         let res = query(&deps, QueryMsg::GetStatus {}).unwrap();
         let value: StatusResponse = from_binary(&res).unwrap();
         assert_eq!(5, value.remaining_guesses);
+        assert_eq!(2, value.word_reveal.len());
 
         // should decrease remaining guesses if wrong
         let msg = HandleMsg::GuessLetter { letter: 'c' as u32 };

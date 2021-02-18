@@ -19,7 +19,31 @@
       "minimum": 0.0
     },
     "word_reveal": {
-      "type": "string"
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/LetterReveal"
+      }
+    }
+  },
+  "definitions": {
+    "LetterReveal": {
+      "type": "object",
+      "required": [
+        "letter",
+        "position"
+      ],
+      "properties": {
+        "letter": {
+          "type": "integer",
+          "format": "uint8",
+          "minimum": 0.0
+        },
+        "position": {
+          "type": "integer",
+          "format": "uint8",
+          "minimum": 0.0
+        }
+      }
     }
   }
 }

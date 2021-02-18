@@ -1,6 +1,8 @@
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
+use crate::state::LetterReveal;
+
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct InitMsg {}
 
@@ -22,5 +24,5 @@ pub enum QueryMsg {
 pub struct StatusResponse {
     pub word_length: u8,
     pub remaining_guesses: u8,
-    pub word_reveal: String,
+    pub word_reveal: Vec<LetterReveal>,
 }
