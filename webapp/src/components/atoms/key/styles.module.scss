@@ -16,6 +16,13 @@
   left: 0;
 }
 
+.used {
+  position: absolute;
+  top: 0.2rem;
+  left: 0.05rem;
+  z-index: 99;
+}
+
 .text {
   color: $color-secondary;
   font-size: 3rem;
