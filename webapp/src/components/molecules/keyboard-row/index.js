@@ -4,13 +4,13 @@ import Key from "../../atoms/key";
 
 import styles from "./styles.module.scss";
 
-function KeyboardRow({ keys = ["q", "w", "e", "r", "t", "y"] }) {
+function KeyboardRow({ keys = ["q", "w", "e", "r", "t", "y"], disabled }) {
   return (
     <ul className={styles.container}>
       {keys.map((key) => {
         return (
           <li id={key} className={styles.key}>
-            <Key letter={key} />
+            <Key disabled={disabled} letter={key} />
           </li>
         );
       })}
