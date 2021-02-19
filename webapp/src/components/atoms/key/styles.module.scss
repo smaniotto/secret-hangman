@@ -1,0 +1,22 @@
+@import "styles/variables";
+
+.container {
+  width: 2.8rem;
+  height: 2.9rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  background-color: black;
+}
+
+.border {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.text {
+  color: $color-secondary;
+  font-size: 3rem;
+}
