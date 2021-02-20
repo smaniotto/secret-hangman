@@ -1,13 +1,13 @@
 import React, { StrictMode } from "react";
 import ReactDOM from "react-dom";
 
-import "styles/base.scss";
+import Key from "components/atoms/key";
 
-import { ExampleComponent } from "components/atoms";
+import "styles/base.scss";
 
 ReactDOM.render(
   <StrictMode>
-    <ExampleComponent />
+    <Key />
   </StrictMode>,
   document.getElementById("root")
 );
