@@ -1,5 +1,6 @@
 import React from "react";
 import { render } from "@testing-library/react";
+
 import LetterReveal from ".";
 
 test("component should render letter", () => {

@@ -1,7 +1,7 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
 
-import LetterReveal from "./index";
+import LetterReveal from ".";
 
 storiesOf("LetterReveal", module)
   .add("Default", () => <LetterReveal />)

@@ -1,5 +1,6 @@
 import React from "react";
 import { render } from "@testing-library/react";
+
 import WordReveal from ".";
 
 test("component should render list of letters", () => {
