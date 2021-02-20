@@ -1,63 +1,140 @@
-# Secret Contracts Starter Pack
+# Secret Hangman Smart Contract
 
-This is a template to build secret contracts in Rust to run in
+This is the smart contract code written in Rust with the hangman game rules. It runs in
 [Secret Network](https://github.com/enigmampc/SecretNetwork).
-To understand the framework better, please read the overview in the
-[cosmwasm repo](https://github.com/CosmWasm/cosmwasm/blob/master/README.md),
-and dig into the [cosmwasm docs](https://www.cosmwasm.com).
-This assumes you understand the theory and just want to get coding.
 
-## Creating a new repo from template
+This project was generated using the [Secret Contracts Starter Pack]
+(https://github.com/enigmampc/secret-template).
 
-Assuming you have a recent version of rust and cargo installed (via [rustup](https://rustup.rs/)),
-then the following should get you a new repo to start a contract:
+## Prerequisites
 
-First, install
-[cargo-generate](https://github.com/ashleygwilliams/cargo-generate).
-Unless you did that before, run this line now:
+Before starting, make sure you have [rustup](https://rustup.rs/) along with a
+recent `rustc` and `cargo` version installed. Currently, we are testing on 1.49+.
 
-```sh
-cargo install cargo-generate --features vendored-openssl
-```
+And you need to have the `wasm32-unknown-unknown` target installed as well.
 
-Now, use it to create your new contract.
-Go to the folder in which you want to place it and run:
+You can check that via:
 
 ```sh
-cargo generate --git https://github.com/enigmampc/secret-template.git --name YOUR_NAME_HERE
+rustc --version
+cargo --version
+rustup target list --installed
+# if wasm32 is not listed above, run this
+rustup target add wasm32-unknown-unknown
 ```
 
-You will now have a new folder called `YOUR_NAME_HERE` (I hope you changed that to something else)
-containing a simple working contract and build system that you can customize.
-
-## Create a Repo
-
-After generating, you have a initialized local git repo, but no commits, and no remote.
-Go to a server (eg. github) and create a new upstream repo (called `YOUR-GIT-URL` below).
-Then run the following:
+## Compiling and running tests
 
 ```sh
-# this is needed to create a valid Cargo.lock file (see below)
-cargo check
-git checkout -b master # in case you generate from non-master
-git add .
-git commit -m 'Initial Commit'
-git remote add origin YOUR-GIT-URL
-git push -u origin master
+# this will produce a wasm build in ./target/wasm32-unknown-unknown/release/secret_hangman.wasm
+cargo wasm
+
+# this runs unit tests with helpful backtraces
+RUST_BACKTRACE=1 cargo unit-test
+
+# this runs integration tests with cranelift backend (uses rust stable)
+cargo integration-test
+
+# this runs integration tests with singlepass backend (needs rust nightly)
+cargo integration-test --no-default-features --features singlepass
+
+# auto-generate json schema
+cargo schema
 ```
 
-## Using your project
+The wasmer engine, embedded in `cosmwasm-vm` supports multiple backends:
+singlepass and cranelift. Singlepass has fast compile times and slower run times,
+and supportes gas metering. It also requires rust `nightly`. This is used as default
+when embedding `cosmwasm-vm` in `go-cosmwasm` and is needed to use if you want to
+check the gas usage.
 
-Once you have your custom repo, you should check out [Developing](./Developing.md) to explain
-more on how to run tests and develop code. Or go through the
-[online tutorial](https://www.cosmwasm.com/docs/getting-started/intro) to get a better feel
-of how to develop.
+However, when just building contacts, if you don't want to worry about installing
+two rust toolchains, you can run all tests with cranelift. The integration tests
+may take a small bit longer, but the results will be the same. The only difference
+is that you can not check gas usage here, so if you wish to optimize gas, you must
+switch to nightly and run with cranelift.
 
-[Publishing](./Publishing.md) contains useful information on how to publish your contract
-to the world, once you are ready to deploy it on a running blockchain. And
-[Importing](./Importing.md) contains information about pulling in other contracts or crates
-that have been published.
+### Understanding the tests
 
-Please replace this README file with information about your specific project. You can keep
-the `Developing.md` and `Publishing.md` files as useful referenced, but please set some
-proper description in the README.
+The main code is in `src/contract.rs` and the unit tests there run in pure rust,
+which makes them very quick to execute and give nice output on failures, especially
+if you do `RUST_BACKTRACE=1 cargo unit-test`.
+
+However, we don't just want to test the logic rust, but also the compiled Wasm artifact
+inside a VM. You can look in `tests/integration.rs` to see some examples there. They
+load the Wasm binary into the vm and call the contract externally. Effort has been
+made that the syntax is very similar to the calls in the native rust contract and
+quite easy to code. In fact, usually you can just copy a few unit tests and modify
+a few lines to make an integration test (this should get even easier in a future release).
+
+To run the latest integration tests, you need to explicitely rebuild the Wasm file with
+`cargo wasm` and then run `cargo integration-test`.
+
+We consider testing critical for anything on a blockchain, and recommend to always keep
+the tests up to date. While doing active development, it is often simplest to disable
+the integration tests completely and iterate rapidly on the code in `contract.rs`,
+both the logic and the tests. Once the code is finalized, you can copy over some unit
+tests into the integration.rs and make the needed changes. This ensures the compiled
+Wasm also behaves as desired in the real system.
+
+## Generating JSON Schema
+
+While the Wasm calls (`init`, `handle`, `query`) accept JSON, this is not enough
+information to use it. We need to expose the schema for the expected messages to the
+clients. You can generate this schema by calling `cargo schema`, which will output
+4 files in `./schema`, corresponding to the 3 message types the contract accepts,
+as well as the internal `State`.
+
+These files are in standard json-schema format, which should be usable by various
+client side tools, either to auto-generate codecs, or just to validate incoming
+json wrt. the defined schema.
+
+## Preparing the Wasm bytecode for production
+
+Before we upload it to a chain, we need to ensure the smallest output size possible,
+as this will be included in the body of a transaction. We also want to have a
+reproducible build process, so third parties can verify that the uploaded Wasm
+code did indeed come from the claimed rust code.
+
+To solve both these issues, we have produced `rust-optimizer`, a docker image to
+produce an extremely small build output in a consistent manner. The suggest way
+to run it is this:
+
+```sh
+docker run --rm -v "$(pwd)":/code \
+  --mount type=volume,source="$(basename "$(pwd)")_cache",target=/code/target \
+  --mount type=volume,source=registry_cache,target=/usr/local/cargo/registry \
+  cosmwasm/rust-optimizer:0.8.0
+```
+
+We must mount the contract code to `/code`. You can use a absolute path instead
+of `$(pwd)` if you don't want to `cd` to the directory first. The other two
+volumes are nice for speedup. Mounting `/code/target` in particular is useful
+to avoid docker overwriting your local dev files with root permissions.
+Note the `/code/target` cache is unique for each contract being compiled to limit
+interference, while the registry cache is global.
+
+This is rather slow compared to local compilations, especially the first compile
+of a given contract. The use of the two volume caches is very useful to speed up
+following compiles of the same contract.
+
+This produces a `contract.wasm` file in the current directory (which must be the root
+directory of your rust project, the one with `Cargo.toml` inside). As well as
+`hash.txt` containing the Sha256 hash of `contract.wasm`, and it will rebuild
+your schema files as well.
+
+### Testing production build
+
+Once we have this compressed `contract.wasm`, we may want to ensure it is actually
+doing everything it is supposed to (as it is about 4% of the original size).
+If you update the "WASM" line in `tests/integration.rs`, it will run the integration
+steps on the optimized build, not just the normal build. I have never seen a different
+behavior, but it is nice to verify sometimes.
+
+```rust
+static WASM: &[u8] = include_bytes!("../contract.wasm");
+```
+
+Note that this is the same (deterministic) code you will be uploading to
+a blockchain to test it out, as we need to shrink the size and produce a
+clear mapping from wasm hash back to the source code.
