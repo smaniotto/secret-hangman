@@ -4,7 +4,7 @@ import KeyboardRow from "../../molecules/keyboard-row";
 
 import styles from "./styles.module.scss";
 
-function Keyboard({ disabled = false }) {
+const Keyboard = ({ disabled = false }) => {
   return (
     <ul className={styles.container}>
       <KeyboardRow disabled={disabled} keys={["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"]} />
@@ -12,6 +12,6 @@ function Keyboard({ disabled = false }) {
       <KeyboardRow disabled={disabled} keys={["z", "x", "c", "v", "b", "n", "m"]} />
     </ul>
   );
-}
+};
 
 export default Keyboard;

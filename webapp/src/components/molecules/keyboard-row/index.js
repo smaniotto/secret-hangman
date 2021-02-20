@@ -4,7 +4,7 @@ import Key from "../../atoms/key";
 
 import styles from "./styles.module.scss";
 
-function KeyboardRow({ letters = [], disabled }) {
+const KeyboardRow = ({ letters = [], disabled = false }) => {
   return (
     <ul className={styles.container}>
       {letters.map((letter, index) => {
@@ -16,6 +16,6 @@ function KeyboardRow({ letters = [], disabled }) {
       })}
     </ul>
   );
-}
+};
 
 export default KeyboardRow;

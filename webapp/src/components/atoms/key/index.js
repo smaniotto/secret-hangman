@@ -5,7 +5,7 @@ import styles from "./styles.module.scss";
 import keyBorder from "./key-border.svg";
 import keyUsed from "./key-used.svg";
 
-function Key({ letter = "a", used = false, disabled }) {
+const Key = ({ letter, used = false, disabled = false }) => {
   const handleClick = (e) => {
     !disabled && console.log(e.target.element);
   };
@@ -20,6 +20,6 @@ function Key({ letter = "a", used = false, disabled }) {
       <p className={styles.text}>{letter}</p>
     </div>
   );
-}
+};
 
 export default Key;
