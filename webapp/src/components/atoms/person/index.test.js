@@ -5,7 +5,7 @@ import Person from ".";
 
 test("Render null as default", () => {
   const { queryByAltText } = render(<Person />);
-  const image = queryByAltText("Hangman");
+  const image = queryByAltText(/Hangman/i);
   expect(image).toBeNull();
 });
 
