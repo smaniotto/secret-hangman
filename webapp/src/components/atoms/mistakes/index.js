@@ -2,7 +2,7 @@ import React from "react";
 
 import styles from "./styles.module.scss";
 
-const Mistakes = ({ mistakes = 0 }) => {
+const Mistakes = ({ mistakes }) => {
   return <div className={styles.container}>{mistakes} / 6</div>;
 };
 
