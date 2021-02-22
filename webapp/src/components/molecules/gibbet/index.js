@@ -6,7 +6,7 @@ import Structure from "../../atoms/structure";
 
 import styles from "./styles.module.scss";
 
-const Gibbet = ({ mistakes }) => {
+const Gibbet = ({ mistakes = 0 }) => {
   return (
     <div className={styles.container}>
       <div>
