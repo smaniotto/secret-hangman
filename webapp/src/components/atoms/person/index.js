@@ -1,5 +1,7 @@
 import React from "react";
 
+import styles from "./styles.module.scss";
+
 import person1 from "./person1.svg";
 import person2 from "./person2.svg";
 import person3 from "./person3.svg";
@@ -29,7 +31,7 @@ const Person = ({ mistakes }) => {
     }
   };
 
-  return <>{image()}</>;
+  return <div className={styles.container}>{image()}</div>;
 };
 
 export default Person;
