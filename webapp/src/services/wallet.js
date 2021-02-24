@@ -1,7 +1,8 @@
 import { SigningCosmWasmClient } from "secretjs";
 
 const CHAIN_ID = process.env.REACT_APP_SECRET_CHAIN_ID;
-const API_URL = process.env.REACT_APP_SECRET_API_URL;
+const REST_API_URL = process.env.REACT_APP_SECRET_REST_API_URL;
+const RPC_API_URL = process.env.REACT_APP_SECRET_RPC_API_URL;
 const IS_PRODUCTION_BUILD = process.env.NODE_ENV === "production";
 
 /*
@@ -36,8 +37,8 @@ const _enableDev = async () => {
   await window.keplr.experimentalSuggestChain({
     chainId: CHAIN_ID,
     chainName: "Local Secret Chain",
-    rpc: `${API_URL}:26657`,
-    rest: `${API_URL}:1337`,
+    rpc: RPC_API_URL,
+    rest: REST_API_URL,
     bip44: {
       coinType: 529,
     },
@@ -86,7 +87,7 @@ const _setupOfflineSigner = async () => {
   const accounts = await offlineSigner.getAccounts();
 
   return new SigningCosmWasmClient(
-    API_URL,
+    REST_API_URL,
     accounts[0].address,
     offlineSigner,
     window.getEnigmaUtils(CHAIN_ID)
