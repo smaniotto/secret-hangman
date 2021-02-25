@@ -1,0 +1,11 @@
+@import "styles/variables";
+
+.container {
+  width: 100%;
+  padding: 10px 100px;
+  border-bottom: 2px solid $color-secondary;
+}
+
+.title {
+  color: $color-secondary;
+}
