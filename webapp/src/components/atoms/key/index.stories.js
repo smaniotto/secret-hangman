@@ -5,4 +5,5 @@ import Key from ".";
 
 storiesOf("Key", module)
   .add("Default", () => <Key />)
-  .add("Used", () => <Key used={true} />);
+  .add("Letter A", () => <Key letter="a" />)
+  .add("Letter B Used", () => <Key letter="b" used={true} />);
