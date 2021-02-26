@@ -1,19 +1,12 @@
 const CODE_ID = process.env.REACT_APP_CONTRACT_CODE_ID;
 
-let _client = {};
-let _contractAddress = "";
-
 const init = async (client) => {
-  _client = client;
-
-  const result = await _client.instantiate(CODE_ID, {}, `secret-hangman-${Date.now()}`);
-  _contractAddress = result.contractAddress;
-
-  return _contractAddress;
+  const result = await client.instantiate(CODE_ID, {}, `secret-hangman-${Date.now()}`);
+  return result.contractAddress;
 };
 
-const queryStatus = async () => {
-  const result = await _client.queryContractSmart(_contractAddress, { get_status: {} });
+const queryStatus = async (client, contractAddress) => {
+  const result = await client.queryContractSmart(contractAddress, { get_status: {} });
 
   const wordReveal = Array(result.word_length);
   result.word_reveal.forEach(({ letter, position }) => {
@@ -27,12 +20,11 @@ const queryStatus = async () => {
   };
 };
 
-const guessLetter = async (letter) => {
-  const letter_ascii = letter.charCodeAt(0);
-  const result = await _client.execute(_contractAddress, {
-    guess_letter: { letter: letter_ascii },
+const guessLetter = async (client, contractAddress, letter) => {
+  const letterAscii = letter.charCodeAt(0);
+  return await client.execute(contractAddress, {
+    guess_letter: { letter: letterAscii },
   });
-  return await queryStatus();
 };
 
 export default {
