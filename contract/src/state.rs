@@ -12,7 +12,7 @@ pub struct State {
     pub word: String,
     pub word_length: u8,
     pub word_reveal: Vec<LetterReveal>,
-    pub remaining_guesses: u8,
+    pub mistakes: u8,
     pub winner: bool,
 }
 

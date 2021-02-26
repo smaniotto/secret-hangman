@@ -3,12 +3,12 @@
   "title": "StatusResponse",
   "type": "object",
   "required": [
-    "remaining_guesses",
+    "mistakes",
     "word_length",
     "word_reveal"
   ],
   "properties": {
-    "remaining_guesses": {
+    "mistakes": {
       "type": "integer",
       "format": "uint8",
       "minimum": 0.0
