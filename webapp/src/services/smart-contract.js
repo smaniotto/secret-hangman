@@ -10,7 +10,7 @@ const queryStatus = async (client, contractAddress) => {
 
   const wordReveal = Array(result.word_length);
   result.word_reveal.forEach(({ letter, position }) => {
-    wordReveal[position] = letter;
+    wordReveal[position] = String.fromCharCode(letter);
   });
 
   return {
