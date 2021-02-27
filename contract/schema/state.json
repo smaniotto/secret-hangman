@@ -3,21 +3,21 @@
   "title": "State",
   "type": "object",
   "required": [
+    "mistakes",
     "player",
-    "remaining_guesses",
     "winner",
     "word",
     "word_length",
     "word_reveal"
   ],
   "properties": {
-    "player": {
-      "$ref": "#/definitions/CanonicalAddr"
-    },
-    "remaining_guesses": {
+    "mistakes": {
       "type": "integer",
       "format": "uint8",
       "minimum": 0.0
+    },
+    "player": {
+      "$ref": "#/definitions/CanonicalAddr"
     },
     "winner": {
       "type": "boolean"

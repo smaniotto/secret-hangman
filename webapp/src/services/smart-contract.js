@@ -14,7 +14,7 @@ const queryStatus = async (client, contractAddress) => {
   });
 
   return {
-    remainingGuesses: result.remaining_guesses,
+    mistakes: result.mistakes,
     wordLength: result.word_length,
     wordReveal,
   };

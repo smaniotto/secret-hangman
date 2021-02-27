@@ -23,6 +23,6 @@ pub enum QueryMsg {
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct StatusResponse {
     pub word_length: u8,
-    pub remaining_guesses: u8,
+    pub mistakes: u8,
     pub word_reveal: Vec<LetterReveal>,
 }

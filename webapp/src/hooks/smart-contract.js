@@ -4,7 +4,7 @@ import SmartContractService from "../services/smart-contract";
 
 const useSmartContract = (client) => {
   const [contractAddress, setContractAddress] = useState("");
-  const [remainingGuesses, setRemainingGuesses] = useState(0);
+  const [mistakes, setMistakes] = useState(0);
   const [wordLength, setWordLength] = useState(0);
   const [wordReveal, setWordReveal] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -21,7 +21,7 @@ const useSmartContract = (client) => {
     const status = await SmartContractService.queryStatus(client, contractAddress);
     setIsLoading(false);
 
-    setRemainingGuesses(status.remainingGuesses);
+    setMistakes(status.mistakes);
     setWordLength(status.wordLength);
     setWordReveal(status.wordReveal);
   };
@@ -34,15 +34,7 @@ const useSmartContract = (client) => {
     await queryStatus();
   };
 
-  return [
-    contractAddress,
-    remainingGuesses,
-    wordLength,
-    wordReveal,
-    isLoading,
-    queryStatus,
-    guessLetter,
-  ];
+  return [contractAddress, mistakes, wordLength, wordReveal, isLoading, queryStatus, guessLetter];
 };
 
 export default useSmartContract;

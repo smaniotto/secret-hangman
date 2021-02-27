@@ -30,7 +30,7 @@ pub fn init<S: Storage, A: Api, Q: Querier>(
         word: word,
         word_length: word_length as u8,
         word_reveal: vec![],
-        remaining_guesses: 5,
+        mistakes: 0,
         winner: false,
     };
 
@@ -76,7 +76,7 @@ pub fn try_guess_letter<S: Storage, A: Api, Q: Querier>(
             return Err(StdError::Unauthorized { backtrace: None });
         }
 
-        if state.remaining_guesses <= 0 {
+        if state.mistakes >= 6 {
             return Err(StdError::GenericErr { 
                 msg: String::from("You're out of guesses"),
                 backtrace: None,
@@ -85,7 +85,7 @@ pub fn try_guess_letter<S: Storage, A: Api, Q: Querier>(
 
         let letter_char = char::from_u32(letter).unwrap();
         if !state.word.contains(letter_char) {
-            state.remaining_guesses -= 1;
+            state.mistakes += 1;
         } else {
             for (i, c) in state.word.chars().enumerate() {
                 if c == letter_char {
@@ -129,7 +129,7 @@ pub fn try_restart<S: Storage, A: Api, Q: Querier>(
         let word_length = new_word.chars().count();
         state.word_length = word_length as u8;
         state.word_reveal = vec![];
-        state.remaining_guesses = 5;
+        state.mistakes = 0;
         state.winner = false;
 
         Ok(state)
@@ -156,7 +156,7 @@ fn query_status<S: Storage, A: Api, Q: Querier>(
     let state = config_read(&deps.storage).load()?;
     Ok(StatusResponse {
         word_length: state.word.chars().count() as u8,
-        remaining_guesses: state.remaining_guesses as u8,
+        mistakes: state.mistakes as u8,
         word_reveal: state.word_reveal,
     })
 }
@@ -203,7 +203,7 @@ mod tests {
         let res = query(&deps, QueryMsg::GetStatus {}).unwrap();
         let value: StatusResponse = from_binary(&res).unwrap();
         assert_eq!(6, value.word_length);
-        assert_eq!(5, value.remaining_guesses);
+        assert_eq!(0, value.mistakes);
         assert_eq!(vec![] as Vec<LetterReveal>, value.word_reveal);
     }
 
@@ -227,26 +227,26 @@ mod tests {
             _ => panic!("Only the original player can guess"),
         }
 
-        // should maintain number of remaining guesses if write
+        // should maintain number of mistakes if write
         let msg = HandleMsg::GuessLetter { letter: 'd' as u32 };
         let env = mock_env("creator", &coins(100_000_000, "uscrt"));
         let _res = handle(&mut deps, env, msg);
 
         let res = query(&deps, QueryMsg::GetStatus {}).unwrap();
         let value: StatusResponse = from_binary(&res).unwrap();
-        assert_eq!(5, value.remaining_guesses);
+        assert_eq!(0, value.mistakes);
         assert_eq!(2, value.word_reveal.len());
 
-        // should decrease remaining guesses if wrong
+        // should decrease mistakes if wrong
         let msg = HandleMsg::GuessLetter { letter: 'c' as u32 };
         let env = mock_env("creator", &coins(100_000_000, "uscrt"));
         let _res = handle(&mut deps, env, msg);
 
         let res = query(&deps, QueryMsg::GetStatus {}).unwrap();
         let value: StatusResponse = from_binary(&res).unwrap();
-        assert_eq!(4, value.remaining_guesses);
+        assert_eq!(1, value.mistakes);
 
-        // should block guesses if no remaining guess
+        // should block guesses if no mistake
         let msg = HandleMsg::GuessLetter { letter: 'f' as u32 };
         let env = mock_env("creator", &coins(100_000_000, "uscrt"));
         let _res = handle(&mut deps, env, msg);
@@ -260,6 +260,10 @@ mod tests {
         let _res = handle(&mut deps, env, msg);
 
         let msg = HandleMsg::GuessLetter { letter: 'i' as u32 };
+        let env = mock_env("creator", &coins(100_000_000, "uscrt"));
+        let _res = handle(&mut deps, env, msg);
+
+        let msg = HandleMsg::GuessLetter { letter: 'j' as u32 };
         let env = mock_env("creator", &coins(100_000_000, "uscrt"));
         let res = handle(&mut deps, env, msg);
         match res {
@@ -276,7 +280,7 @@ mod tests {
         };
         let res = query(&deps, QueryMsg::GetStatus {}).unwrap();
         let value: StatusResponse = from_binary(&res).unwrap();
-        assert_eq!(0, value.remaining_guesses);
+        assert_eq!(6, value.mistakes);
     }
 
     #[test]
@@ -334,13 +338,13 @@ mod tests {
         let _res = handle(&mut deps, env, msg);
         let res = query(&deps, QueryMsg::GetStatus {}).unwrap();
         let value: StatusResponse = from_binary(&res).unwrap();
-        assert_eq!(4, value.remaining_guesses);
+        assert_eq!(1, value.mistakes);
 
         let msg = HandleMsg::Restart {};
         let env = mock_env("creator", &coins(100_000_000, "uscrt"));
         let _res = handle(&mut deps, env, msg);
         let res = query(&deps, QueryMsg::GetStatus {}).unwrap();
         let value: StatusResponse = from_binary(&res).unwrap();
-        assert_eq!(5, value.remaining_guesses);
+        assert_eq!(0, value.mistakes);
     }
 }
