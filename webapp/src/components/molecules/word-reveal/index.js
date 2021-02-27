@@ -4,7 +4,7 @@ import LetterReveal from "../../atoms/letter-reveal";
 
 import styles from "./styles.module.scss";
 
-const WordReveal = ({ letters = Array(6) }) => {
+const WordReveal = ({ letters = Array(6).fill("") }) => {
   return (
     <ul className={styles.container}>
       {letters.map((letter, index) => {
