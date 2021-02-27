@@ -4,6 +4,8 @@
   width: 100%;
   padding: 10px 100px;
   border-bottom: 2px solid $color-secondary;
+  display: flex;
+  justify-content: space-between;
 }
 
 .title {
