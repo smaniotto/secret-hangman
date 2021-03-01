@@ -4,6 +4,7 @@ import Gibbet from "components/molecules/gibbet";
 import WordReveal from "components/molecules/word-reveal";
 import Keyboard from "components/organisms/keyboard";
 import Navbar from "components/organisms/navbar";
+import Footer from "components/organisms/footer";
 import { WalletContext } from "context/wallet";
 import useSmartContract from "hooks/smart-contract";
 
@@ -46,6 +47,7 @@ const MainPage = () => {
           <Keyboard usedLetters={["f", "g"]} onClick={guessLetter} />
         </div>
       </div>
+      <Footer />
     </div>
   );
 };
