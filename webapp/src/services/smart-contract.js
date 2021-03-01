@@ -8,7 +8,7 @@ const init = async (client) => {
 const queryStatus = async (client, contractAddress) => {
   const result = await client.queryContractSmart(contractAddress, { get_status: {} });
 
-  const wordReveal = Array(result.word_length);
+  const wordReveal = Array(result.word_length).fill("");
   result.word_reveal.forEach(({ letter, position }) => {
     wordReveal[position] = String.fromCharCode(letter);
   });
