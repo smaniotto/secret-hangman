@@ -10,66 +10,76 @@
   border: none;
   padding: 0.8rem 1.6rem;
   text-decoration: none;
-  background: #0069ed;
   color: #ffffff;
   font-size: 0.8rem;
   font-weight: 600;
   line-height: 1;
   -webkit-appearance: none;
   -moz-appearance: none;
-
+  background: linear-gradient(135deg, rgba(38, 0, 128, 0.61), #aa42b5ab), #00aaed;
   border-radius: 5px;
 
   animation-name: flash;
-  animation-duration: 10s;
+  animation-duration: 5s;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
 
   //Firefox 1+
   -webkit-animation-name: flash;
-  -webkit-animation-duration: 10s;
+  -webkit-animation-duration: 5s;
   -webkit-animation-timing-function: linear;
   -webkit-animation-iteration-count: infinite;
 
   //Safari 3-4
   -moz-animation-name: flash;
-  -moz-animation-duration: 10s;
+  -moz-animation-duration: 5s;
   -moz-animation-timing-function: linear;
   -moz-animation-iteration-count: infinite;
 }
 
 @keyframes flash {
   0% {
-    background-color: rgb(55, 0, 87);
+    transition: all ease-in-out 5s;
+    opacity: 0.9;
   }
   10% {
-    background-color: rgb(92, 1, 92);
+    transition: all ease-in-out 5s;
+    opacity: 1;
   }
   20% {
-    background-color: rgb(38, 0, 128);
+    transition: all ease-in-out 5s;
+    opacity: 0.9;
   }
   30% {
-    background-color: rgb(2, 2, 110);
+    transition: all ease-in-out 5s;
+    opacity: 0.8;
   }
   40% {
-    background-color: rgb(67, 67, 255);
+    transition: all ease-in-out 5s;
+    opacity: 0.7;
   }
   50% {
-    background-color: rgb(42, 42, 177);
+    transition: all ease-in-out 5s;
+    opacity: 0.6;
   }
   60% {
-    background-color: rgb(67, 67, 255);
+    transition: all ease-in-out 5s;
+    opacity: 0.5;
   }
   70% {
-    background-color: rgb(2, 2, 110);
+    transition: all ease-in-out 5s;
+    opacity: 0.6;
   }
   80% {
-    background-color: rgb(38, 0, 128);
+    transition: all ease-in-out 5s;
+    opacity: 0.7;
   }
   90% {
-    background-color: rgb(92, 1, 92);
+    transition: all ease-in-out 5s;
+    opacity: 0.8;
   }
   100% {
-    background-color: rgb(55, 0, 87);
+    transition: all ease-in-out 5s;
+    opacity: 0.9;
   }
 }
