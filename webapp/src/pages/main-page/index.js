@@ -20,6 +20,7 @@ const MainPage = () => {
     isLoading,
     queryStatus,
     guessLetter,
+    usedLetters,
   ] = useSmartContract(client);
 
   useEffect(async () => {
@@ -44,7 +45,7 @@ const MainPage = () => {
           </div>
         </div>
         <div className={styles.lower}>
-          <Keyboard usedLetters={["f", "g"]} onClick={guessLetter} />
+          <Keyboard usedLetters={usedLetters} onClick={guessLetter} />
         </div>
       </div>
       <Footer />

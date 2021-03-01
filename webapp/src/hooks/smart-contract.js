@@ -8,6 +8,7 @@ const useSmartContract = (client) => {
   const [wordLength, setWordLength] = useState(0);
   const [wordReveal, setWordReveal] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [usedLetters, setUsedLetters] = useState([]);
 
   useEffect(async () => {
     if (!client) return;
@@ -20,8 +21,6 @@ const useSmartContract = (client) => {
     setIsLoading(true);
     const status = await SmartContractService.queryStatus(client, contractAddress);
     setIsLoading(false);
-    console.log("Status: ", status);
-
     setMistakes(status.mistakes);
     setWordLength(status.wordLength);
     setWordReveal(status.wordReveal);
@@ -31,7 +30,7 @@ const useSmartContract = (client) => {
     setIsLoading(true);
     await SmartContractService.guessLetter(client, contractAddress, letter);
     setIsLoading(false);
-
+    setUsedLetters(...usedLetters, ...letter);
     await queryStatus();
   };
 
