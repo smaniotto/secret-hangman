@@ -20,6 +20,7 @@ const useSmartContract = (client) => {
     setIsLoading(true);
     const status = await SmartContractService.queryStatus(client, contractAddress);
     setIsLoading(false);
+    console.log("Status: ", status);
 
     setMistakes(status.mistakes);
     setWordLength(status.wordLength);
