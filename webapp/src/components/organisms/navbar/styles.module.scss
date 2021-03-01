@@ -2,12 +2,19 @@
 
 .container {
   width: 100%;
-  padding: 10px 100px;
-  border-bottom: 2px solid $color-secondary;
+  padding: 10px 100px 15px 100px;
   display: flex;
   justify-content: space-between;
+  position: relative;
 }
 
 .title {
   color: $color-secondary;
+}
+
+.border {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
 }
