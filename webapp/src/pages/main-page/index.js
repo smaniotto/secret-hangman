@@ -32,9 +32,9 @@ const MainPage = () => {
   }, [contractAddress]);
 
   return (
-    <div>
+    <div className={styles.container}>
       <Navbar />
-      <div className={styles.container}>
+      <div className={styles.main_section}>
         <div className={styles.upper}>
           <div className={styles.gibbet}>
             <Gibbet mistakes={mistakes} />

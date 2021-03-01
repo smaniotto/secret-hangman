@@ -1,4 +1,11 @@
 .container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.main_section {
   display: flex;
   flex-direction: column;
   justify-content: center;
