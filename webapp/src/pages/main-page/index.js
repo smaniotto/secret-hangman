@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect } from "react";
 
 import Gibbet from "components/molecules/gibbet";
 import WordReveal from "components/molecules/word-reveal";
@@ -30,12 +30,12 @@ const MainPage = () => {
     }
   }, [contractAddress]);
 
-  let usedLetters = [];
+  const [usedLetters, setUsedLetters] = useState([]);
 
   const handleGuess = async (letter) => {
     try {
       await guessLetter(letter);
-      usedLetters.push(letter);
+      setUsedLetters([...usedLetters, letter]);
     } catch (error) {
       console.log(error);
     }
