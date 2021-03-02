@@ -25,7 +25,6 @@ const MainPage = () => {
     if (contractAddress) {
       setTimeout(async () => {
         await queryStatus();
-        console.log("queryStatus", wordReveal, wordLength);
       }, 5000);
     }
   }, [contractAddress]);
