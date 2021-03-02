@@ -1,4 +1,11 @@
 .container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.mainSgit ection {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -17,7 +24,7 @@
   margin: 0 15px;
 }
 
-.word_reveal {
+.wordReveal {
   min-width: 300px;
   min-height: 100px;
   margin: 0 15px;
