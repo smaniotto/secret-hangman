@@ -7,7 +7,7 @@ import styles from "./styles.module.scss";
 const KeplrStyleButton = ({ children, logo = false }) => {
   const containerStyle = logo ? styles.containerLogo : styles.container;
   const childrenStyle = logo ? styles.childrenLogo : styles.children;
-  const flashing = logo ? null : styles.flashing;
+  const flashing = !logo ? styles.flashing : null;
   return (
     <div className={flashing}>
       <div className={containerStyle}>
