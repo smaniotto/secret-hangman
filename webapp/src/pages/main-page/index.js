@@ -26,7 +26,6 @@ const MainPage = () => {
     if (contractAddress) {
       setTimeout(async () => {
         await queryStatus();
-        console.log("queryStatus", wordReveal, wordLength);
       }, 5000);
     }
   }, [contractAddress]);
@@ -34,12 +33,12 @@ const MainPage = () => {
   return (
     <div className={styles.container}>
       <Navbar />
-      <div className={styles.main_section}>
+      <div className={styles.mainSection}>
         <div className={styles.upper}>
           <div className={styles.gibbet}>
             <Gibbet mistakes={mistakes} />
           </div>
-          <div className={styles.word_reveal}>
+          <div className={styles.wordReveal}>
             <WordReveal letters={wordReveal} />
           </div>
         </div>
