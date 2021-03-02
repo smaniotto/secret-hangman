@@ -20,17 +20,26 @@ const MainPage = () => {
     isLoading,
     queryStatus,
     guessLetter,
-    usedLetters,
   ] = useSmartContract(client);
 
   useEffect(async () => {
     if (contractAddress) {
       setTimeout(async () => {
         await queryStatus();
-        console.log("queryStatus", wordReveal, wordLength);
       }, 5000);
     }
   }, [contractAddress]);
+
+  let usedLetters = [];
+
+  const handleGuess = async (letter) => {
+    try {
+      await guessLetter(letter);
+      usedLetters.push(letter);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className={styles.container}>
@@ -45,7 +54,7 @@ const MainPage = () => {
           </div>
         </div>
         <div className={styles.lower}>
-          <Keyboard usedLetters={usedLetters} onClick={guessLetter} />
+          <Keyboard usedLetters={usedLetters} onClick={handleGuess} />
         </div>
       </div>
       <Footer />
