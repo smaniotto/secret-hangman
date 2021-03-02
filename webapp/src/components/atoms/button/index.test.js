@@ -9,6 +9,6 @@ test("Renders successfully", () => {
 
 test("Renders children", () => {
   const { getByText } = render(<Button>children</Button>);
-  const letterContainer = getByText(/children/i);
-  expect(letterContainer).toBeInTheDocument();
+  const container = getByText(/children/i);
+  expect(container).toBeInTheDocument();
 });
