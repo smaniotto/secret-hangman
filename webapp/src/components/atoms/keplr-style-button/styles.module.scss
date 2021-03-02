@@ -1,5 +1,5 @@
 @import "styles/variables";
-@import url("https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;900&display=swap");
+// @import url("https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;900&display=swap");
 
 .container {
   position: relative;
@@ -29,7 +29,7 @@
 }
 
 .childrenLogo {
-  font-family: "Nunito Sans", sans-serif;
+  font-family: $font-keplr;
   font-size: 1.8rem;
   font-weight: 600;
   color: white;
