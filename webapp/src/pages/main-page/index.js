@@ -12,6 +12,7 @@ import styles from "./styles.module.scss";
 
 const MainPage = () => {
   const { client } = useContext(WalletContext);
+
   const [
     contractAddress,
     mistakes,
@@ -22,6 +23,8 @@ const MainPage = () => {
     guessLetter,
   ] = useSmartContract(client);
 
+  const [usedLetters, setUsedLetters] = useState([]);
+
   useEffect(async () => {
     if (contractAddress) {
       setTimeout(async () => {
@@ -29,8 +32,6 @@ const MainPage = () => {
       }, 5000);
     }
   }, [contractAddress]);
-
-  const [usedLetters, setUsedLetters] = useState([]);
 
   const handleGuess = async (letter) => {
     try {
