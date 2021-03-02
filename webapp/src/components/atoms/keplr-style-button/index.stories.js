@@ -1,6 +1,8 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
 
-import FlashingButton from ".";
+import KeplrStyleButton from ".";
 
-storiesOf("Flashing Button", module).add("Default", () => <FlashingButton>Keplr</FlashingButton>);
+storiesOf("Default", module)
+  .add("Default", () => <KeplrStyleButton>Connect to Keplr</KeplrStyleButton>)
+  .add("Logo", () => <KeplrStyleButton logo={true}>K</KeplrStyleButton>);
