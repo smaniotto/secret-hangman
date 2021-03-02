@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect } from "react";
 
 import Gibbet from "components/molecules/gibbet";
 import WordReveal from "components/molecules/word-reveal";
@@ -12,6 +12,7 @@ import styles from "./styles.module.scss";
 
 const MainPage = () => {
   const { client } = useContext(WalletContext);
+
   const [
     contractAddress,
     mistakes,
@@ -22,6 +23,8 @@ const MainPage = () => {
     guessLetter,
   ] = useSmartContract(client);
 
+  const [usedLetters, setUsedLetters] = useState([]);
+
   useEffect(async () => {
     if (contractAddress) {
       setTimeout(async () => {
@@ -29,6 +32,15 @@ const MainPage = () => {
       }, 5000);
     }
   }, [contractAddress]);
+
+  const handleGuess = async (letter) => {
+    try {
+      await guessLetter(letter);
+      setUsedLetters([...usedLetters, letter]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className={styles.container}>
@@ -43,7 +55,7 @@ const MainPage = () => {
           </div>
         </div>
         <div className={styles.lower}>
-          <Keyboard usedLetters={["f", "g"]} onClick={guessLetter} />
+          <Keyboard usedLetters={usedLetters} onClick={handleGuess} />
         </div>
       </div>
       <Footer />

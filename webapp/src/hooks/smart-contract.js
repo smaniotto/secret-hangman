@@ -29,7 +29,6 @@ const useSmartContract = (client) => {
     setIsLoading(true);
     await SmartContractService.guessLetter(client, contractAddress, letter);
     setIsLoading(false);
-
     await queryStatus();
   };
 
