@@ -1,6 +1,6 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
 
-import Loading from ".";
+import YouLose from ".";
 
-storiesOf("Loading", module).add("Default", () => <Loading />);
+storiesOf("YouLose", module).add("Default", () => <YouLose />);
