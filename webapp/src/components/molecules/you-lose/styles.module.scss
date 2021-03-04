@@ -1,0 +1,39 @@
+@import "styles/variables";
+
+.container {
+  align-items: center;
+  color: $color-secondary;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 90%;
+  height: 90%;
+  transform: translateY(5px);
+}
+
+.text {
+  color: $color-error;
+  font-size: 2rem;
+  margin-bottom: 15px;
+}
+
+.buttonsContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 30px;
+}
+
+.button {
+  font-family: $font-default;
+  background-color: transparent;
+  border: none;
+  color: $color-secondary;
+  font-size: 1rem;
+}
+
+.button:hover {
+  background-color: $color-secondary;
+  color: $color-primary;
+}
