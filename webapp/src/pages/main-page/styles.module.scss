@@ -1,37 +1,37 @@
 .container {
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  min-height: 100vh;
 }
 
 .mainSection {
+  align-items: center;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
 }
 
 .upper {
+  align-items: center;
   display: flex;
   justify-content: space-between;
-  align-items: center;
   margin: 0 50px 100px 0;
 }
 
 .gibbet {
-  min-width: 250px;
   margin: 0 15px;
+  min-width: 250px;
 }
 
 .wordReveal {
-  min-width: 300px;
-  min-height: 100px;
   margin: 0 15px;
+  min-height: 100px;
+  min-width: 300px;
 }
 
 .lower {
+  align-items: center;
   display: flex;
   justify-content: center;
-  align-items: center;
 }

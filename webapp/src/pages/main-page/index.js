@@ -16,22 +16,25 @@ const MainPage = () => {
   const [
     contractAddress,
     mistakes,
-    wordLength,
+    wordLength, // eslint-disable-line no-unused-vars
     wordReveal,
-    isLoading,
+    isLoading, // eslint-disable-line no-unused-vars
     queryStatus,
     guessLetter,
   ] = useSmartContract(client);
 
   const [usedLetters, setUsedLetters] = useState([]);
 
-  useEffect(async () => {
-    if (contractAddress) {
-      setTimeout(async () => {
-        await queryStatus();
-      }, 5000);
-    }
-  }, [contractAddress]);
+  useEffect(() => {
+    const updateGameStatus = async () => {
+      if (contractAddress) {
+        setTimeout(async () => {
+          await queryStatus();
+        }, 5000);
+      }
+    };
+    updateGameStatus();
+  }, [contractAddress, queryStatus]);
 
   const handleGuess = async (letter) => {
     try {

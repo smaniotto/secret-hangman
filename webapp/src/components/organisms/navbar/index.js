@@ -1,6 +1,6 @@
 import React from "react";
 
-import KeplrButton from "../keplr-button";
+import KeplrConnectButton from "../keplr-connect-button";
 import border from "./navbar-border.svg";
 
 import styles from "./styles.module.scss";
@@ -10,7 +10,7 @@ const Navbar = () => {
     <nav className={styles.container}>
       <img src={border} alt="Navbar Border" className={styles.border} />
       <p className={styles.title}>scrt.hangman</p>
-      <KeplrButton />
+      <KeplrConnectButton />
     </nav>
   );
 };

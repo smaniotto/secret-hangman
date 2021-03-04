@@ -9,11 +9,14 @@ const useSmartContract = (client) => {
   const [wordReveal, setWordReveal] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(async () => {
-    if (!client) return;
+  useEffect(() => {
+    const initSmartContract = async () => {
+      if (!client) return;
 
-    const contractAddress = await SmartContractService.init(client);
-    setContractAddress(contractAddress);
+      const contractAddress = await SmartContractService.init(client);
+      setContractAddress(contractAddress);
+    };
+    initSmartContract();
   }, [client]);
 
   const queryStatus = async () => {

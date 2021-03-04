@@ -1,9 +1,7 @@
 import React, { useContext } from "react";
 
 import { WalletContext } from "../../../context/wallet";
-import KeplrButton from "components/atoms/keplr-button";
-
-import styles from "./styles.module.scss";
+import KeplrButton from "../../atoms/keplr-button";
 
 const KeplrConnectButton = () => {
   const { client, enable } = useContext(WalletContext);

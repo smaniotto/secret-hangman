@@ -1,6 +1,12 @@
 {
   "extends": "stylelint-config-sass-guidelines",
   "rules": {
-    "string-quotes": "double"
+    "string-quotes": "double",
+    "selector-class-pattern": [
+      "^[a-z][a-zA-Z0-9]+$",
+      {
+        "message": "Selector should be written in lowerCamelCase (selector-class-pattern)"
+      }
+    ]
   }
 }
