@@ -5,6 +5,7 @@ import WordReveal from "components/molecules/word-reveal";
 import Keyboard from "components/organisms/keyboard";
 import Navbar from "components/organisms/navbar";
 import Footer from "components/organisms/footer";
+import Loading from "components/atoms/loading";
 import { WalletContext } from "context/wallet";
 import useSmartContract from "hooks/smart-contract";
 
@@ -24,6 +25,7 @@ const MainPage = () => {
   ] = useSmartContract(client);
 
   const [usedLetters, setUsedLetters] = useState([]);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
     const updateGameStatus = async () => {
@@ -34,12 +36,14 @@ const MainPage = () => {
       }
     };
     updateGameStatus();
-  }, [contractAddress, queryStatus]);
+  }, [contractAddress]);
 
   const handleGuess = async (letter) => {
     try {
+      setIsProcessing(true);
       await guessLetter(letter);
       setUsedLetters([...usedLetters, letter]);
+      setIsProcessing(false);
     } catch (error) {
       console.log(error);
     }
@@ -47,6 +51,7 @@ const MainPage = () => {
 
   return (
     <div className={styles.container}>
+      {isProcessing && <Loading />}
       <Navbar />
       <div className={styles.mainSection}>
         <div className={styles.upper}>
