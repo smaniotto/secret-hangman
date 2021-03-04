@@ -71,9 +71,9 @@ const _enableDev = async () => {
       },
     ],
     gasPriceStep: {
-      low: 0.1,
-      average: 0.25,
-      high: 0.4,
+      low: 0.02,
+      average: 0.025,
+      high: 0.03,
     },
     features: ["secretwasm"],
   });
