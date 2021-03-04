@@ -51,7 +51,7 @@ const MainPage = () => {
 
   return (
     <div className={styles.container}>
-      {isProcessing && <Loading />}
+      {(isProcessing || isLoading || (client && !wordLength)) && <Loading />}
       <Navbar />
       <div className={styles.mainSection}>
         <div className={styles.upper}>
