@@ -5,10 +5,10 @@
   color: $color-secondary;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  width: 90%;
   height: 90%;
+  justify-content: center;
   transform: translateY(5px);
+  width: 90%;
 }
 
 .text {
@@ -18,18 +18,18 @@
 }
 
 .buttonsContainer {
-  display: flex;
   align-items: center;
+  display: flex;
   justify-content: space-between;
-  width: 100%;
   padding: 0 30px;
+  width: 100%;
 }
 
 .button {
-  font-family: $font-default;
   background-color: transparent;
   border: none;
   color: $color-secondary;
+  font-family: $font-default;
   font-size: 1rem;
 }
 
