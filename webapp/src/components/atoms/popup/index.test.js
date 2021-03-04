@@ -1,8 +1,8 @@
 import React from "react";
 import { render } from "@testing-library/react";
 
-import Loading from ".";
+import Popup from ".";
 
 test("Renders successfully", () => {
-  expect(() => render(<Loading />)).not.toThrow();
+  expect(() => render(<Popup />)).not.toThrow();
 });
