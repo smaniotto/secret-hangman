@@ -5,11 +5,12 @@ import Button from "components/atoms/button";
 
 import styles from "./styles.module.scss";
 
-const YouLose = () => {
+const GameEnd = ({ result = "none" }) => {
   return (
     <Popup>
       <div className={styles.container}>
-        <p className={styles.text}>You Lose</p>
+        {result === "lose" && <p className={styles.textLose}>You Lose</p>}
+        {result === "win" && <p className={styles.textWin}>You Win!</p>}
         <div className={styles.buttonsContainer}>
           <Button className={styles.button}>Share</Button>
           <Button className={styles.button}>Retry</Button>
@@ -19,4 +20,4 @@ const YouLose = () => {
   );
 };
 
-export default YouLose;
+export default GameEnd;

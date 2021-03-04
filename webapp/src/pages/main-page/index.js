@@ -6,7 +6,7 @@ import Keyboard from "components/organisms/keyboard";
 import Navbar from "components/organisms/navbar";
 import Footer from "components/organisms/footer";
 import Loading from "components/atoms/loading";
-import YouLose from "components/molecules/you-lose";
+import GameEnd from "components/molecules/game-end";
 import { WalletContext } from "context/wallet";
 import useSmartContract from "hooks/smart-contract";
 
@@ -53,7 +53,8 @@ const MainPage = () => {
   return (
     <div className={styles.container}>
       {(isProcessing || isLoading || (client && !wordLength)) && <Loading />}
-      {mistakes === 6 && <YouLose />}
+      {mistakes === 6 && <GameEnd result={"lose"} />}
+      {wordLength.length > 0 && !wordReveal.includes("") && <GameEnd result={"win"} />}
       <Navbar />
       <div className={styles.mainSection}>
         <div className={styles.upper}>

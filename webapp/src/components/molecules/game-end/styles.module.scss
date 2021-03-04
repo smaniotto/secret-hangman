@@ -11,8 +11,14 @@
   width: 90%;
 }
 
-.text {
+.textLose {
   color: $color-error;
+  font-size: 2rem;
+  margin-bottom: 15px;
+}
+
+.textWin {
+  color: $color-success;
   font-size: 2rem;
   margin-bottom: 15px;
 }
