@@ -1,5 +1,5 @@
 import React from "react";
-import { render } from "@testing-library/react";
+import { render } from "test-utils";
 
 import KeplrButton from ".";
 
@@ -14,7 +14,7 @@ test("Renders children", () => {
 });
 
 test("Renders logo version", () => {
-  const { container } = render(<KeplrButton logo={true}>K</KeplrButton>);
-  expect(container.firstChild.classList.contains(/flashingStyle/i)).toBe(false);
-  expect(container.getByText(/K/i).classList.contains(/childrenLogo/i)).toBe(true);
+  const { container, getByText } = render(<KeplrButton logo={true}>K</KeplrButton>);
+  expect(container.firstChild.className).not.toContain("flashing");
+  expect(getByText(/K/i).className).toContain("childrenLogo");
 });

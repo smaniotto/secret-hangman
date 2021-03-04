@@ -3,10 +3,10 @@
 }
 
 .hangman {
-  position: absolute;
-  top: 1.6rem;
-  left: 5.45rem;
+  align-items: center;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  left: 5.45rem;
+  position: absolute;
+  top: 1.6rem;
 }

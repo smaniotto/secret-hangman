@@ -27,8 +27,10 @@ const guessLetter = async (client, contractAddress, letter) => {
   });
 };
 
-export default {
+const SmartContractService = {
   init,
   queryStatus,
   guessLetter,
 };
+
+export default SmartContractService;

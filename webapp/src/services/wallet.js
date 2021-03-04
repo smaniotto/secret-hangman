@@ -94,6 +94,8 @@ const _setupOfflineSigner = async () => {
   );
 };
 
-export default {
+const WalletService = {
   enable,
 };
+
+export default WalletService;
