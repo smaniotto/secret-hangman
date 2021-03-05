@@ -35,7 +35,7 @@ const MainPage = () => {
       }
     };
     updateGameStatus();
-  }, [contractAddress]);
+  }, [contractAddress]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleGuess = async (letter) => {
     try {
