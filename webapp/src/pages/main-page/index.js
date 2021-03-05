@@ -38,7 +38,7 @@ const MainPage = () => {
       }
     };
     updateGameStatus();
-  }, [contractAddress]);
+  }, [contractAddress]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleGuess = async (letter) => {
     try {
@@ -57,6 +57,8 @@ const MainPage = () => {
       console.log(error);
     }
   };
+
+  const fetchingContract = isLoading || (client && !wordLength);
 
   return (
     <div className={styles.container}>
