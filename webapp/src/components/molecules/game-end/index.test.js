@@ -8,9 +8,7 @@ test("Renders successfully", () => {
 });
 
 test("Renders correct result", () => {
-  const { getByText } = render(<GameEnd result={win} />);
+  const { getByText } = render(<GameEnd result={"win"} />);
   const winContainer = getByText(/win/i);
-  const loseContainer = getByText(/lose/i);
   expect(winContainer).toBeInTheDocument();
-  expect(loseContainer).not.toBeInTheDocument();
 });
