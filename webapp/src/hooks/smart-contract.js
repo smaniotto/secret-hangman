@@ -8,6 +8,7 @@ const useSmartContract = (client) => {
   const [wordLength, setWordLength] = useState(0);
   const [wordReveal, setWordReveal] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [status, setStatus] = useState("ongoing");
 
   useEffect(() => {
     const initSmartContract = async () => {
@@ -35,7 +36,23 @@ const useSmartContract = (client) => {
     await queryStatus();
   };
 
-  return [contractAddress, mistakes, wordLength, wordReveal, isLoading, queryStatus, guessLetter];
+  if (wordLength.length > 0 && !wordReveal.includes("")) {
+    setStatus("win");
+  }
+  if (mistakes === 6) {
+    setStatus("lose");
+  }
+
+  return [
+    contractAddress,
+    mistakes,
+    wordLength,
+    wordReveal,
+    status,
+    isLoading,
+    queryStatus,
+    guessLetter,
+  ];
 };
 
 export default useSmartContract;

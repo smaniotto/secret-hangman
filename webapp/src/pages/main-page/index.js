@@ -26,7 +26,6 @@ const MainPage = () => {
   ] = useSmartContract(client);
 
   const [usedLetters, setUsedLetters] = useState([]);
-  const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
     const updateGameStatus = async () => {
@@ -41,20 +40,19 @@ const MainPage = () => {
 
   const handleGuess = async (letter) => {
     try {
-      setIsProcessing(true);
       await guessLetter(letter);
       setUsedLetters([...usedLetters, letter]);
-      setIsProcessing(false);
     } catch (error) {
       console.log(error);
     }
   };
 
+  const fetchingContract = isLoading || (client && !wordLength);
+
   return (
     <div className={styles.container}>
-      {(isProcessing || isLoading || (client && !wordLength)) && <Loading />}
-      {mistakes === 6 && <GameEnd result={"lose"} />}
-      {wordLength.length > 0 && !wordReveal.includes("") && <GameEnd result={"win"} />}
+      {fetchingContract && <Loading />}
+      {status !== "ongoing" && <GameEnd status={status} />}
       <Navbar />
       <div className={styles.mainSection}>
         <div className={styles.upper}>
