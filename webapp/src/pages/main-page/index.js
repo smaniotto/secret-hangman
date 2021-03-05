@@ -39,10 +39,8 @@ const MainPage = () => {
 
   const handleGuess = async (letter) => {
     try {
-      setIsLoading(true);
       await guessLetter(letter);
       setUsedLetters([...usedLetters, letter]);
-      setIsLoading(false);
     } catch (error) {
       console.log(error);
     }
