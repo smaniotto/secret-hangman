@@ -20,9 +20,11 @@ const MainPage = () => {
     mistakes,
     wordLength, // eslint-disable-line no-unused-vars
     wordReveal,
+    gameResult,
     isLoading, // eslint-disable-line no-unused-vars
     queryStatus,
     guessLetter,
+    restart,
   ] = useSmartContract(client);
 
   const [usedLetters, setUsedLetters] = useState([]);
@@ -47,12 +49,19 @@ const MainPage = () => {
     }
   };
 
-  const fetchingContract = isLoading || (client && !wordLength);
+  const handleRestart = async () => {
+    try {
+      setUsedLetters([]);
+      await restart();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className={styles.container}>
-      {fetchingContract && <Loading />}
-      {status !== "ongoing" && <GameEnd status={status} />}
+      {isLoading && <Loading />}
+      {gameResult && <GameEnd result={gameResult} onClick={handleRestart} />}
       <Navbar />
       <div className={styles.mainSection}>
         <div className={styles.upper}>

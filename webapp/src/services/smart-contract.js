@@ -27,10 +27,17 @@ const guessLetter = async (client, contractAddress, letter) => {
   });
 };
 
+const restart = async (client, contractAddress) => {
+  return await client.execute(contractAddress, {
+    restart: {},
+  });
+};
+
 const SmartContractService = {
   init,
   queryStatus,
   guessLetter,
+  restart,
 };
 
 export default SmartContractService;

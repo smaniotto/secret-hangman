@@ -5,15 +5,17 @@ import Button from "components/atoms/button";
 
 import styles from "./styles.module.scss";
 
-const GameEnd = ({ status }) => {
+const GameEnd = ({ result, onClick }) => {
   return (
     <Popup>
       <div className={styles.container}>
-        {status === "lose" && <p className={styles.textLose}>You Lose</p>}
-        {status === "win" && <p className={styles.textWin}>You Win!</p>}
+        {result === "lose" && <p className={styles.textLose}>You Lose</p>}
+        {result === "win" && <p className={styles.textWin}>You Win!</p>}
         <div className={styles.buttonsContainer}>
           <Button className={styles.button}>Share</Button>
-          <Button className={styles.button}>Retry</Button>
+          <Button className={styles.button} onClick={onClick}>
+            Restart
+          </Button>
         </div>
       </div>
     </Popup>
