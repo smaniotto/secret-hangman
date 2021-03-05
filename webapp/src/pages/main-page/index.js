@@ -58,8 +58,6 @@ const MainPage = () => {
     }
   };
 
-  const fetchingContract = isLoading || (client && !wordLength);
-
   return (
     <div className={styles.container}>
       {isLoading && <Loading />}
