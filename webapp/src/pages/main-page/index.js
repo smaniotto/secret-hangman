@@ -5,6 +5,7 @@ import WordReveal from "components/molecules/word-reveal";
 import Keyboard from "components/organisms/keyboard";
 import Navbar from "components/organisms/navbar";
 import Footer from "components/organisms/footer";
+import Loading from "components/atoms/loading";
 import { WalletContext } from "context/wallet";
 import useSmartContract from "hooks/smart-contract";
 
@@ -45,8 +46,11 @@ const MainPage = () => {
     }
   };
 
+  const fetchingContract = isLoading || (client && !wordLength);
+
   return (
     <div className={styles.container}>
+      {fetchingContract && <Loading />}
       <Navbar />
       <div className={styles.mainSection}>
         <div className={styles.upper}>

@@ -1,0 +1,12 @@
+@import "styles/variables";
+
+.container {
+  align-items: center;
+  color: $color-secondary;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: center;
+  transform: translateY(10px);
+  width: 100%;
+}
