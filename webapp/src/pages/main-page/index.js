@@ -28,6 +28,7 @@ const MainPage = () => {
   ] = useSmartContract(client);
 
   const [usedLetters, setUsedLetters] = useState([]);
+  const [isWaitingForWord, setIsWaitingForWord] = useState(false);
 
   useEffect(() => {
     const updateGameStatus = async () => {
@@ -39,6 +40,14 @@ const MainPage = () => {
     };
     updateGameStatus();
   }, [contractAddress]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (!client) {
+      return;
+    }
+    !wordLength && setIsWaitingForWord(true);
+    wordLength && setIsWaitingForWord(false);
+  }, [client, wordLength]);
 
   const handleGuess = async (letter) => {
     try {
@@ -58,9 +67,11 @@ const MainPage = () => {
     }
   };
 
+  const loading = isLoading || isWaitingForWord;
+
   return (
     <div className={styles.container}>
-      {isLoading && <Loading />}
+      {loading && <Loading />}
       {gameResult && <GameEnd result={gameResult} restart={handleRestart} />}
       <Navbar />
       <div className={styles.mainSection}>

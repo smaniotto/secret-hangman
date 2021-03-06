@@ -16,6 +16,7 @@ const useSmartContract = (client) => {
       setIsLoading(true);
       const contractAddress = await SmartContractService.init(client);
       setContractAddress(contractAddress);
+      setIsLoading(false);
     };
     initSmartContract();
   }, [client]);
