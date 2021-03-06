@@ -61,7 +61,7 @@ const MainPage = () => {
   return (
     <div className={styles.container}>
       {isLoading && <Loading />}
-      {gameResult && <GameEnd result={gameResult} onClick={handleRestart} />}
+      {gameResult && <GameEnd result={gameResult} restart={handleRestart} />}
       <Navbar />
       <div className={styles.mainSection}>
         <div className={styles.upper}>
