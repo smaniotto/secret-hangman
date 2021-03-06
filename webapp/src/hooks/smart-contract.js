@@ -39,7 +39,6 @@ const useSmartContract = (client) => {
   const restart = async () => {
     setGameResult(null);
     setIsLoading(true);
-    await queryStatus();
     await SmartContractService.restart(client, contractAddress);
     await queryStatus();
     setIsLoading(false);
