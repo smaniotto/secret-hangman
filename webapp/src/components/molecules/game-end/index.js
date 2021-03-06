@@ -11,12 +11,10 @@ const GameEnd = ({ result, restart }) => {
       <div className={styles.container}>
         {result === "lose" && <p className={styles.textLose}>You Lose</p>}
         {result === "win" && <p className={styles.textWin}>You Win!</p>}
-        <div className={styles.buttonsContainer}>
-          <Button className={styles.button}>Share</Button>
-          <Button className={styles.button} onClick={restart}>
-            Restart
-          </Button>
-        </div>
+
+        <Button className={styles.button} onClick={restart}>
+          Restart
+        </Button>
       </div>
     </Popup>
   );
