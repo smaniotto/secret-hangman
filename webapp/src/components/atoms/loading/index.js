@@ -9,8 +9,8 @@ const Loading = () => {
   return (
     <Popup>
       <div className={styles.container}>
-        <p>Loading...</p>
-        <img src={loading} alt="Loading Icon" />
+        <p className={styles.word}>Loading...</p>
+        <img src={loading} alt="Loading Icon" className={styles.icon} />
       </div>
     </Popup>
   );
