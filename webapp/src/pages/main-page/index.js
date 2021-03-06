@@ -18,10 +18,10 @@ const MainPage = () => {
   const [
     contractAddress,
     mistakes,
-    wordLength, // eslint-disable-line no-unused-vars
+    wordLength,
     wordReveal,
     gameResult,
-    isLoading, // eslint-disable-line no-unused-vars
+    isLoading,
     queryStatus,
     guessLetter,
     restart,
@@ -39,7 +39,7 @@ const MainPage = () => {
       }
     };
     updateGameStatus();
-  }, [contractAddress]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [contractAddress]);
 
   useEffect(() => {
     if (!client) {
