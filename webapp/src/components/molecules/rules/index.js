@@ -9,7 +9,7 @@ const Rules = ({ closeRules }) => {
   return (
     <Popup size="large">
       <div className={styles.container}>
-        <h1 className={styles.title}>s_cr_t.hangman</h1>
+        <h1 className={styles.title}>scrt.hangman</h1>
         <h3 className={styles.subtitle}>How to play</h3>
         <ul className={styles.list}>
           <li>1. Connect to your Keplr Wallet</li>

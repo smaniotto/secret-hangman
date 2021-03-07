@@ -3,6 +3,7 @@
 .container {
   align-items: center;
   display: flex;
+  height: 2rem;
   justify-content: center;
   margin: 20px 0;
   width: 100%;
@@ -10,4 +11,11 @@
 
 .title {
   color: $color-secondary;
+  font-size: 1.2rem;
+  transition: all 0.1s ease-in-out;
+}
+
+.title:hover {
+  font-size: 1.3rem;
+  cursor: pointer;
 }

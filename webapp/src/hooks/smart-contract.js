@@ -22,7 +22,7 @@ const useSmartContract = (client) => {
   }, [client]);
 
   useEffect(() => {
-    if (wordLength > 0 && !wordReveal.includes("")) {
+    if (wordLength > 0 && wordReveal.length > 0 && !wordReveal.includes("")) {
       setGameResult("win");
     }
     if (mistakes === 6) {
