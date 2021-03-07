@@ -22,7 +22,7 @@ pub fn init<S: Storage, A: Api, Q: Querier>(
     env: Env,
     _msg: InitMsg,
 ) -> StdResult<InitResponse> {
-    let game_state = init_game_state(&env);
+    let game_state = init_game_state(&env, String::default());
     let state = State {
         player: deps.api.canonical_address(&env.message.sender)?,
         game: game_state,
@@ -33,8 +33,8 @@ pub fn init<S: Storage, A: Api, Q: Querier>(
     Ok(InitResponse::default())
 }
 
-fn init_game_state(env: &Env) -> GameState {
-    let seed = generate_seed(&env);
+fn init_game_state(env: &Env, prev_word: String) -> GameState {
+    let seed = generate_seed(&env, prev_word);
     let word = random_word(seed);
     let word_length = word.chars().count();
     GameState {
@@ -46,9 +46,10 @@ fn init_game_state(env: &Env) -> GameState {
     }
 }
 
-fn generate_seed(env: &Env) -> u64 {
-    let send_key_u64: u64 = env.message.sender.to_string().into_bytes().into_iter().map(|x| x as u64).sum();
-    env.block.height + env.block.time + send_key_u64
+fn generate_seed(env: &Env, sugar: String) -> u64 {
+    let sugar_u64: u64 = string_to_u64sum(sugar);
+    let sender_key_u64: u64 = string_to_u64sum(env.message.sender.to_string());
+    env.block.height + env.block.time + sender_key_u64 + sugar_u64
 }
 
 fn random_word(seed: u64) -> String {
@@ -56,6 +57,10 @@ fn random_word(seed: u64) -> String {
     let mut rng = ChaChaRng::from_seed(seed);
     let index = (rng.next_u32() % (WORDLIST.len() as u32)) as usize;
     String::from(WORDLIST[index])
+}
+
+fn string_to_u64sum(string: String) -> u64 {
+    string.into_bytes().into_iter().map(|x| x as u64).sum()
 }
 
 
@@ -131,7 +136,7 @@ pub fn try_restart<S: Storage, A: Api, Q: Querier>(
             });
         }
 
-        state.game = init_game_state(&env);
+        state.game = init_game_state(&env, state.game.word);
 
         Ok(state)
     })?;
@@ -342,10 +347,17 @@ mod tests {
         assert_eq!(1, value.mistakes);
 
         let msg = HandleMsg::Restart {};
-        let env = mock_env("creator", &coins(100_000_000, "uscrt"));
+        let mut env = mock_env("creator", &coins(100_000_000, "uscrt"));
+        env.block.height = 1;
+        env.block.time = 2;
         let _res = handle(&mut deps, env, msg);
         let res = query(&deps, QueryMsg::GetStatus {}).unwrap();
         let value: StatusResponse = from_binary(&res).unwrap();
         assert_eq!(0, value.mistakes);
+        let state_result = config_read(&deps.storage).load();
+        match state_result {
+            Ok(state) => assert_ne!("daybed", state.game.word),
+            _ => panic!("Not able to load state"),
+        };
     }
 }
