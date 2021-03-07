@@ -11,13 +11,23 @@
   z-index: 9999;
 }
 
-.borderContainer {
+.smallBorderContainer {
   align-items: center;
   display: flex;
   height: 110px;
   justify-content: center;
   position: relative;
   width: 200px;
+}
+
+.largeBorderContainer {
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.9);
+  display: flex;
+  height: 330px;
+  justify-content: center;
+  position: relative;
+  width: 350px;
 }
 
 .border {

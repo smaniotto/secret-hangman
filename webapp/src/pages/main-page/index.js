@@ -11,6 +11,7 @@ import { WalletContext } from "context/wallet";
 import useSmartContract from "hooks/smart-contract";
 
 import styles from "./styles.module.scss";
+import Rules from "components/molecules/rules";
 
 const MainPage = () => {
   const { client } = useContext(WalletContext);
@@ -29,6 +30,7 @@ const MainPage = () => {
 
   const [usedLetters, setUsedLetters] = useState([]);
   const [isWaitingForWord, setIsWaitingForWord] = useState(false);
+  const [isBeginning, setIsBeginning] = useState(true);
 
   useEffect(() => {
     const updateGameStatus = async () => {
@@ -67,10 +69,15 @@ const MainPage = () => {
     }
   };
 
+  const handleStart = () => {
+    setIsBeginning(false);
+  };
+
   const loading = isLoading || isWaitingForWord;
 
   return (
     <div className={styles.container}>
+      {isBeginning && <Rules start={handleStart} />}
       {loading && <Loading />}
       {gameResult && <GameEnd result={gameResult} restart={handleRestart} />}
       <Navbar />

@@ -1,16 +1,27 @@
 import React from "react";
 
-import popupBorder from "./popup-border.svg";
+import smallPopupBorder from "./small-popup-border.svg";
+import largePopupBorder from "./large-popup-border.svg";
 
 import styles from "./styles.module.scss";
 
-const Popup = ({ children, onClick }) => {
+const Popup = ({ children, onClick, size = "small" }) => {
   return (
     <div className={styles.container} onClick={onClick}>
-      <div className={styles.borderContainer}>
-        <img src={popupBorder} alt="Popup Border" className={styles.border} />
-        {children}
-      </div>
+      {size === "small" && (
+        <div className={styles.smallBorderContainer}>
+          <img src={smallPopupBorder} alt="Small Popup Border" className={styles.border} />
+
+          {children}
+        </div>
+      )}
+
+      {size === "large" && (
+        <div className={styles.largeBorderContainer}>
+          <img src={largePopupBorder} alt="Large Popup Border" className={styles.border} />
+          {children}
+        </div>
+      )}
     </div>
   );
 };
