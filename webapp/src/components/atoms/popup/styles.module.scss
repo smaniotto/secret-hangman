@@ -15,9 +15,12 @@
   align-items: center;
   background-color: rgba(0, 0, 0, 0.9);
   display: flex;
+  flex-direction: column;
+  height: 110px;
   justify-content: center;
-  margin: 5px;
+  padding: 5px;
   position: relative;
+  width: 200px;
 }
 
 .borderContainerLarge {
