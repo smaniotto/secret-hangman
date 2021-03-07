@@ -5,21 +5,26 @@
   color: $color-secondary;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  padding: 10px;
+  justify-content: space-around;
+  padding: 40px;
   z-index: 9;
 }
 
-.textLose {
-  color: $color-error;
-  font-size: 2rem;
-  margin-bottom: 15px;
-}
-
-.textWin {
+.title {
   color: $color-success;
   font-size: 2rem;
-  margin-bottom: 15px;
+  margin: 0 0 10px 0;
+}
+
+.subtitle {
+  font-size: 1.4rem;
+  margin: 10px;
+}
+
+.list {
+  font-family: $font-keplr;
+  font-size: 0.8rem;
+  margin-bottom: 30px;
 }
 
 .button {
@@ -27,7 +32,7 @@
   border: none;
   color: $color-secondary;
   font-family: $font-default;
-  font-size: 1rem;
+  font-size: 1.2rem;
 }
 
 .button:hover {

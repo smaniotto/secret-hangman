@@ -11,6 +11,12 @@
 
 .title {
   color: $color-secondary;
+  font-size: 1.2rem;
+  margin: 10px;
+}
+
+.title:hover {
+  cursor: pointer;
 }
 
 .border {
@@ -18,4 +24,8 @@
   left: 0;
   position: absolute;
   width: 100%;
+}
+
+.navLinks {
+  display: flex;
 }

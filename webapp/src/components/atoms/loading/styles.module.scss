@@ -1,14 +1,7 @@
 @import "styles/variables";
 
-.container {
-  align-items: center;
-  color: $color-secondary;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
 .word {
+  color: $color-secondary;
   font-size: 1.2rem;
   margin-bottom: 10px;
 }
