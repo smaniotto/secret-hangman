@@ -3,38 +3,15 @@
   "title": "State",
   "type": "object",
   "required": [
-    "mistakes",
-    "player",
-    "winner",
-    "word",
-    "word_length",
-    "word_reveal"
+    "game",
+    "player"
   ],
   "properties": {
-    "mistakes": {
-      "type": "integer",
-      "format": "uint8",
-      "minimum": 0.0
+    "game": {
+      "$ref": "#/definitions/GameState"
     },
     "player": {
       "$ref": "#/definitions/CanonicalAddr"
-    },
-    "winner": {
-      "type": "boolean"
-    },
-    "word": {
-      "type": "string"
-    },
-    "word_length": {
-      "type": "integer",
-      "format": "uint8",
-      "minimum": 0.0
-    },
-    "word_reveal": {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/LetterReveal"
-      }
     }
   },
   "definitions": {
@@ -44,6 +21,40 @@
     },
     "CanonicalAddr": {
       "$ref": "#/definitions/Binary"
+    },
+    "GameState": {
+      "type": "object",
+      "required": [
+        "mistakes",
+        "winner",
+        "word",
+        "word_length",
+        "word_reveal"
+      ],
+      "properties": {
+        "mistakes": {
+          "type": "integer",
+          "format": "uint8",
+          "minimum": 0.0
+        },
+        "winner": {
+          "type": "boolean"
+        },
+        "word": {
+          "type": "string"
+        },
+        "word_length": {
+          "type": "integer",
+          "format": "uint8",
+          "minimum": 0.0
+        },
+        "word_reveal": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LetterReveal"
+          }
+        }
+      }
     },
     "LetterReveal": {
       "type": "object",
