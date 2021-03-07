@@ -9,6 +9,11 @@ pub static CONFIG_KEY: &[u8] = b"config";
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct State {
     pub player: CanonicalAddr,
+    pub game: GameState,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+pub struct GameState {
     pub word: String,
     pub word_length: u8,
     pub word_reveal: Vec<LetterReveal>,

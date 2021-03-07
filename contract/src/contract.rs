@@ -12,7 +12,7 @@ use crate::wordlist::WORDLIST;
 use crate::msg::{
     HandleMsg, InitMsg, QueryMsg, StatusResponse
 };
-use crate::state::{config, config_read, State, LetterReveal};
+use crate::state::{config, config_read, State, GameState, LetterReveal};
 
 
 // -------- Init --------
@@ -25,13 +25,16 @@ pub fn init<S: Storage, A: Api, Q: Querier>(
     let seed = generate_seed(&env);
     let word = random_word(seed);
     let word_length = word.chars().count();
-    let state = State {
-        player: deps.api.canonical_address(&env.message.sender)?,
+    let game_state = GameState {
         word: word,
         word_length: word_length as u8,
         word_reveal: vec![],
         mistakes: 0,
         winner: false,
+    };
+    let state = State {
+        player: deps.api.canonical_address(&env.message.sender)?,
+        game: game_state,
     };
 
     config(&mut deps.storage).save(&state)?;
@@ -76,7 +79,7 @@ pub fn try_guess_letter<S: Storage, A: Api, Q: Querier>(
             return Err(StdError::Unauthorized { backtrace: None });
         }
 
-        if state.mistakes >= 6 {
+        if state.game.mistakes >= 6 {
             return Err(StdError::GenericErr { 
                 msg: String::from("You're out of guesses"),
                 backtrace: None,
@@ -84,20 +87,20 @@ pub fn try_guess_letter<S: Storage, A: Api, Q: Querier>(
         }
 
         let letter_char = char::from_u32(letter).unwrap();
-        if !state.word.contains(letter_char) {
-            state.mistakes += 1;
+        if !state.game.word.contains(letter_char) {
+            state.game.mistakes += 1;
         } else {
-            for (i, c) in state.word.chars().enumerate() {
+            for (i, c) in state.game.word.chars().enumerate() {
                 if c == letter_char {
-                    state.word_reveal.push(LetterReveal {
+                    state.game.word_reveal.push(LetterReveal {
                         letter: c as u8,
                         position: i as u8,
                     });
                 }
             }
 
-            if (state.word_reveal.len() as u8) == state.word_length {
-                state.winner = true;
+            if (state.game.word_reveal.len() as u8) == state.game.word_length {
+                state.game.winner = true;
             }
         }
 
@@ -117,7 +120,7 @@ pub fn try_restart<S: Storage, A: Api, Q: Querier>(
             return Err(StdError::Unauthorized { backtrace: None });
         }
 
-        if !state.winner {
+        if !state.game.winner {
             return Err(StdError::GenericErr { 
                 msg: String::from("Can't start a new round before guessing the word"),
                 backtrace: None,
@@ -127,10 +130,10 @@ pub fn try_restart<S: Storage, A: Api, Q: Querier>(
         let seed = generate_seed(&env);
         let new_word = random_word(seed);
         let word_length = new_word.chars().count();
-        state.word_length = word_length as u8;
-        state.word_reveal = vec![];
-        state.mistakes = 0;
-        state.winner = false;
+        state.game.word_length = word_length as u8;
+        state.game.word_reveal = vec![];
+        state.game.mistakes = 0;
+        state.game.winner = false;
 
         Ok(state)
     })?;
@@ -155,9 +158,9 @@ fn query_status<S: Storage, A: Api, Q: Querier>(
 ) -> StdResult<StatusResponse> {
     let state = config_read(&deps.storage).load()?;
     Ok(StatusResponse {
-        word_length: state.word.chars().count() as u8,
-        mistakes: state.mistakes as u8,
-        word_reveal: state.word_reveal,
+        word_length: state.game.word.chars().count() as u8,
+        mistakes: state.game.mistakes as u8,
+        word_reveal: state.game.word_reveal,
     })
 }
 
