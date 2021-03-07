@@ -3,4 +3,4 @@ import { storiesOf } from "@storybook/react";
 
 import Rules from ".";
 
-storiesOf("GameEnd", module).add("Default", () => <Rules />);
+storiesOf("Rules", module).add("Default", () => <Rules />);
