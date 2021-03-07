@@ -6,6 +6,7 @@ import Keyboard from "components/organisms/keyboard";
 import Navbar from "components/organisms/navbar";
 import Footer from "components/organisms/footer";
 import Loading from "components/atoms/loading";
+import GameEnd from "components/molecules/game-end";
 import { WalletContext } from "context/wallet";
 import useSmartContract from "hooks/smart-contract";
 
@@ -17,14 +18,17 @@ const MainPage = () => {
   const [
     contractAddress,
     mistakes,
-    wordLength, // eslint-disable-line no-unused-vars
+    wordLength,
     wordReveal,
-    isLoading, // eslint-disable-line no-unused-vars
+    gameResult,
+    isLoading,
     queryStatus,
     guessLetter,
+    restart,
   ] = useSmartContract(client);
 
   const [usedLetters, setUsedLetters] = useState([]);
+  const [isWaitingForWord, setIsWaitingForWord] = useState(false);
 
   useEffect(() => {
     const updateGameStatus = async () => {
@@ -35,7 +39,15 @@ const MainPage = () => {
       }
     };
     updateGameStatus();
-  }, [contractAddress]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [contractAddress]);
+
+  useEffect(() => {
+    if (!client) {
+      return;
+    }
+    !wordLength && setIsWaitingForWord(true);
+    wordLength && setIsWaitingForWord(false);
+  }, [client, wordLength]);
 
   const handleGuess = async (letter) => {
     try {
@@ -46,11 +58,21 @@ const MainPage = () => {
     }
   };
 
-  const fetchingContract = isLoading || (client && !wordLength);
+  const handleRestart = async () => {
+    try {
+      setUsedLetters([]);
+      await restart();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const loading = isLoading || isWaitingForWord;
 
   return (
     <div className={styles.container}>
-      {fetchingContract && <Loading />}
+      {loading && <Loading />}
+      {gameResult && <GameEnd result={gameResult} restart={handleRestart} />}
       <Navbar />
       <div className={styles.mainSection}>
         <div className={styles.upper}>

@@ -48,10 +48,18 @@ const guessLetter = async (client, contractAddress, letter) => {
   );
 };
 
+const restart = async (client, contractAddress) => {
+  return await client.execute(contractAddress, { restart: {} }, "Secret Hangman - Restart", [], {
+    amount: [amountToUscrt(0.0225)],
+    gas: "150000",
+  });
+};
+
 const SmartContractService = {
   init,
   queryStatus,
   guessLetter,
+  restart,
 };
 
 export default SmartContractService;
