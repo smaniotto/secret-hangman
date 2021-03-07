@@ -7,14 +7,11 @@ import styles from "./styles.module.scss";
 
 const Popup = ({ children, onClick, size = "small" }) => {
   const borderImage = size === "small" ? smallPopupBorder : largePopupBorder;
-  const borderStyle =
-    size === "small"
-      ? styles.borderContainer
-      : `${styles.borderContainer} ${styles.borderContainerLarge}`;
+  const borderStyle = size === "small" ? null : styles.borderContainerLarge;
 
   return (
     <div className={styles.container} onClick={onClick}>
-      <div className={borderStyle}>
+      <div className={`${borderStyle} ${styles.borderContainer}`}>
         <img src={borderImage} alt="Popup Border" className={styles.border} />
         {children}
       </div>

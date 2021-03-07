@@ -1,13 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
 
 import KeplrConnectButton from "../keplr-connect-button";
+import Rules from "components/molecules/rules";
 import border from "./navbar-border.svg";
 
 import styles from "./styles.module.scss";
 
-const Navbar = ({ openRules }) => {
+const Navbar = () => {
+  const [rules, setRules] = useState(false);
+
+  const closeRules = () => {
+    setRules(false);
+  };
+
+  const openRules = () => {
+    setRules(true);
+  };
+
   return (
-    <nav className={styles.container}>
+    <div className={styles.container}>
+      {rules && <Rules closeRules={closeRules} />}
       <img src={border} alt="Navbar Border" className={styles.border} />
       <div className={styles.navLinks}>
         <p className={styles.title}>scrt.hangman</p>
@@ -16,7 +28,7 @@ const Navbar = ({ openRules }) => {
         </p>
       </div>
       <KeplrConnectButton />
-    </nav>
+    </div>
   );
 };
 

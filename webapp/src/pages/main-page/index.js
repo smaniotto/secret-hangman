@@ -7,7 +7,6 @@ import Navbar from "components/organisms/navbar";
 import Footer from "components/organisms/footer";
 import Loading from "components/atoms/loading";
 import GameEnd from "components/molecules/game-end";
-import Rules from "components/molecules/rules";
 import { WalletContext } from "context/wallet";
 import useSmartContract from "hooks/smart-contract";
 
@@ -30,7 +29,6 @@ const MainPage = () => {
 
   const [usedLetters, setUsedLetters] = useState([]);
   const [isWaitingForWord, setIsWaitingForWord] = useState(false);
-  const [rules, setRules] = useState(false);
 
   useEffect(() => {
     const updateGameStatus = async () => {
@@ -69,22 +67,13 @@ const MainPage = () => {
     }
   };
 
-  const closeRules = () => {
-    setRules(false);
-  };
-
-  const openRules = () => {
-    setRules(true);
-  };
-
   const loading = isLoading || isWaitingForWord;
 
   return (
     <div className={styles.container}>
-      {rules && <Rules closeRules={closeRules} />}
       {loading && <Loading />}
       {gameResult && <GameEnd result={gameResult} restart={handleRestart} />}
-      <Navbar openRules={openRules} />
+      <Navbar />
       <div className={styles.mainSection}>
         <div className={styles.upper}>
           <div className={styles.gibbet}>
