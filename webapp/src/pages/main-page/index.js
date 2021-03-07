@@ -30,7 +30,7 @@ const MainPage = () => {
 
   const [usedLetters, setUsedLetters] = useState([]);
   const [isWaitingForWord, setIsWaitingForWord] = useState(false);
-  const [isBeginning, setIsBeginning] = useState(true);
+  const [rules, setRules] = useState(false);
 
   useEffect(() => {
     const updateGameStatus = async () => {
@@ -69,18 +69,22 @@ const MainPage = () => {
     }
   };
 
-  const handleStart = () => {
-    setIsBeginning(false);
+  const closeRules = () => {
+    setRules(false);
+  };
+
+  const openRules = () => {
+    setRules(true);
   };
 
   const loading = isLoading || isWaitingForWord;
 
   return (
     <div className={styles.container}>
-      {isBeginning && <Rules start={handleStart} />}
+      {rules && <Rules closeRules={closeRules} />}
       {loading && <Loading />}
       {gameResult && <GameEnd result={gameResult} restart={handleRestart} />}
-      <Navbar />
+      <Navbar openRules={openRules} />
       <div className={styles.mainSection}>
         <div className={styles.upper}>
           <div className={styles.gibbet}>

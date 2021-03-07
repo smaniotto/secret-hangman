@@ -5,11 +5,20 @@ import border from "./navbar-border.svg";
 
 import styles from "./styles.module.scss";
 
-const Navbar = () => {
+const Navbar = ({ openRules }) => {
   return (
     <nav className={styles.container}>
       <img src={border} alt="Navbar Border" className={styles.border} />
-      <p className={styles.title}>scrt.hangman</p>
+      <div className={styles.navLinks}>
+        <p className={styles.title}>
+          <a href="https://github.com/smaniotto/secret-hangman" target="_blank">
+            scrt.hangman
+          </a>
+        </p>
+        <p className={styles.title} onClick={openRules}>
+          How to play
+        </p>
+      </div>
       <KeplrConnectButton />
     </nav>
   );
