@@ -10,11 +10,7 @@ const Navbar = ({ openRules }) => {
     <nav className={styles.container}>
       <img src={border} alt="Navbar Border" className={styles.border} />
       <div className={styles.navLinks}>
-        <p className={styles.title}>
-          <a href="https://github.com/smaniotto/secret-hangman" target="_blank">
-            scrt.hangman
-          </a>
-        </p>
+        <p className={styles.title}>scrt.hangman</p>
         <p className={styles.title} onClick={openRules}>
           How to play
         </p>
