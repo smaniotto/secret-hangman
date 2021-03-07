@@ -22,16 +22,7 @@ pub fn init<S: Storage, A: Api, Q: Querier>(
     env: Env,
     _msg: InitMsg,
 ) -> StdResult<InitResponse> {
-    let seed = generate_seed(&env);
-    let word = random_word(seed);
-    let word_length = word.chars().count();
-    let game_state = GameState {
-        word: word,
-        word_length: word_length as u8,
-        word_reveal: vec![],
-        mistakes: 0,
-        winner: false,
-    };
+    let game_state = init_game_state(&env);
     let state = State {
         player: deps.api.canonical_address(&env.message.sender)?,
         game: game_state,
@@ -40,6 +31,19 @@ pub fn init<S: Storage, A: Api, Q: Querier>(
     config(&mut deps.storage).save(&state)?;
 
     Ok(InitResponse::default())
+}
+
+fn init_game_state(env: &Env) -> GameState {
+    let seed = generate_seed(&env);
+    let word = random_word(seed);
+    let word_length = word.chars().count();
+    GameState {
+        word: word,
+        word_length: word_length as u8,
+        word_reveal: vec![],
+        mistakes: 0,
+        winner: false,
+    }
 }
 
 fn generate_seed(env: &Env) -> u64 {
@@ -127,13 +131,7 @@ pub fn try_restart<S: Storage, A: Api, Q: Querier>(
             });
         }
 
-        let seed = generate_seed(&env);
-        let new_word = random_word(seed);
-        let word_length = new_word.chars().count();
-        state.game.word_length = word_length as u8;
-        state.game.word_reveal = vec![];
-        state.game.mistakes = 0;
-        state.game.winner = false;
+        state.game = init_game_state(&env);
 
         Ok(state)
     })?;
