@@ -7,11 +7,11 @@ import Navbar from "components/organisms/navbar";
 import Footer from "components/organisms/footer";
 import Loading from "components/atoms/loading";
 import GameEnd from "components/molecules/game-end";
+import Rules from "components/molecules/rules";
 import { WalletContext } from "context/wallet";
 import useSmartContract from "hooks/smart-contract";
 
 import styles from "./styles.module.scss";
-import Rules from "components/molecules/rules";
 
 const MainPage = () => {
   const { client } = useContext(WalletContext);
