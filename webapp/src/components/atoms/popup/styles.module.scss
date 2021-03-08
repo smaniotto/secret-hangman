@@ -24,12 +24,17 @@
 }
 
 .borderContainerLarge {
-  width: 350px;
   height: 330px;
+  width: 350px;
 }
 
 .border {
   left: 0;
   position: absolute;
   top: 0;
+  z-index: 0;
+}
+
+.content {
+  z-index: 1;
 }

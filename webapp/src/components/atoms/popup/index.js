@@ -13,7 +13,7 @@ const Popup = ({ children, onClick, size = "small" }) => {
     <div className={styles.container} onClick={onClick}>
       <div className={`${borderStyle} ${styles.borderContainer}`}>
         <img src={borderImage} alt="Popup Border" className={styles.border} />
-        {children}
+        <span className={styles.content}>{children}</span>
       </div>
     </div>
   );
