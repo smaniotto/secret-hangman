@@ -42,7 +42,7 @@ const guessLetter = async (client, contractAddress, letter) => {
     "Secret Hangman - Guess",
     [],
     {
-      amount: [amountToUscrt(0.0225)],
+      amount: [amountToUscrt(0.0375)],
       gas: "150000",
     }
   );
@@ -50,7 +50,7 @@ const guessLetter = async (client, contractAddress, letter) => {
 
 const restart = async (client, contractAddress) => {
   return await client.execute(contractAddress, { restart: {} }, "Secret Hangman - Restart", [], {
-    amount: [amountToUscrt(0.0225)],
+    amount: [amountToUscrt(0.0375)],
     gas: "150000",
   });
 };
