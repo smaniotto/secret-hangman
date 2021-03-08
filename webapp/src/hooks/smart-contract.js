@@ -11,17 +11,6 @@ const useSmartContract = (client) => {
   const [gameResult, setGameResult] = useState(null);
 
   useEffect(() => {
-    const initSmartContract = async () => {
-      if (!client) return;
-      setIsLoading(true);
-      const contractAddress = await SmartContractService.init(client);
-      setContractAddress(contractAddress);
-      setIsLoading(false);
-    };
-    initSmartContract();
-  }, [client]);
-
-  useEffect(() => {
     if (wordLength > 0 && wordReveal.length > 0 && !wordReveal.includes("")) {
       setGameResult("win");
     }
@@ -29,6 +18,17 @@ const useSmartContract = (client) => {
       setGameResult("lose");
     }
   }, [wordReveal, wordLength, mistakes]);
+
+  const init = async () => {
+    if (!client) {
+      return;
+    }
+
+    setIsLoading(true);
+    const contractAddress = await SmartContractService.init(client);
+    setContractAddress(contractAddress);
+    setIsLoading(false);
+  };
 
   const queryStatus = async () => {
     setIsLoading(true);
@@ -55,6 +55,7 @@ const useSmartContract = (client) => {
   };
 
   return [
+    init,
     contractAddress,
     mistakes,
     wordLength,
