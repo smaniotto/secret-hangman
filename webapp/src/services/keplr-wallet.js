@@ -15,7 +15,7 @@ const enable = async () => {
     await _enableDev();
   }
   await window.keplr.enable(CHAIN_ID);
-  return await _setupOfflineSigner();
+  return await _getClient();
 };
 
 /*
@@ -80,9 +80,9 @@ const _enableDev = async () => {
 };
 
 /*
-  Set-up Keplr to pop-up a window for the user to sign on each tx sent
+  Set-up Keplr client, with window to pop-up for the user to sign on each tx sent
  **/
-const _setupOfflineSigner = async () => {
+const _getClient = async () => {
   const offlineSigner = window.getOfflineSigner(CHAIN_ID);
   const accounts = await offlineSigner.getAccounts();
 
