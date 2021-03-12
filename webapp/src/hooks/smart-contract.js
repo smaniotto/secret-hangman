@@ -24,9 +24,10 @@ const useSmartContract = (client) => {
   useEffect(() => {
     if (wordLength > 0 && wordReveal.length > 0 && !wordReveal.includes("")) {
       setGameResult("win");
-    }
-    if (mistakes === 6) {
+    } else if (mistakes === 6) {
       setGameResult("lose");
+    } else {
+      setGameResult(null);
     }
   }, [wordReveal, wordLength, mistakes]);
 
