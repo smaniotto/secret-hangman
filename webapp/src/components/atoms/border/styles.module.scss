@@ -1,0 +1,13 @@
+.border {
+  align-items: center;
+  border-image-outset: 3px;
+  border-image-slice: 21;
+  border-image-source: url("./border.png");
+  border-image-width: 20px;
+  border-style: solid;
+  border-width: 12px;
+  color: white;
+  display: flex;
+  justify-content: center;
+  width: inherit;
+}
