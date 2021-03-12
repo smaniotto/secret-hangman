@@ -1,0 +1,32 @@
+@import "styles/variables";
+
+.outterContainer {
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 9999;
+}
+
+.innerContainer {
+  background-color: rgba(0, 0, 0, 0.9);
+  color: $color-secondary;
+  position: relative;
+}
+
+.closeIcon {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  width: 10px;
+}
+
+.closeIcon:hover {
+  cursor: pointer;
+  opacity: 0.5;
+}
