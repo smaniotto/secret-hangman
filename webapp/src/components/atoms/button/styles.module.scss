@@ -1,5 +1,17 @@
+@import "styles/variables";
+
+.button {
+  background-color: transparent;
+  border: none;
+  font-family: $font-default;
+  padding: inherit;
+  color: $color-secondary;
+}
+
 .button:hover {
   cursor: pointer;
+  background-color: white;
+  color: $color-primary;
 }
 
 .button:focus {
