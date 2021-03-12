@@ -13,7 +13,7 @@ storiesOf("Border", module)
   ))
   .add("Popup", () => (
     <div style={{ width: "200px", height: "200px", color: "white" }}>
-      <Border>
+      <Border borderWidth={"20px"}>
         <div style={{ fontSize: "1rem" }}>This is a Popup Example</div>
       </Border>
     </div>
