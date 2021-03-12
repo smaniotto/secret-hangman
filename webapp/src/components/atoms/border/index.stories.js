@@ -5,12 +5,16 @@ import Border from ".";
 
 storiesOf("Border", module)
   .add("Key", () => (
-    <Border width={"40px"} height={"40px"}>
-      <div style={{ fontSize: "2.4rem" }}>K</div>
-    </Border>
+    <div style={{ width: "45px", height: "45px", color: "white" }}>
+      <Border>
+        <div style={{ fontSize: "2.4rem" }}>K</div>
+      </Border>
+    </div>
   ))
   .add("Popup", () => (
-    <Border width={"200px"} height={"200px"}>
-      <div style={{ fontSize: "1rem" }}>This is a Popup Example</div>
-    </Border>
+    <div style={{ width: "200px", height: "200px", color: "white" }}>
+      <Border>
+        <div style={{ fontSize: "1rem" }}>This is a Popup Example</div>
+      </Border>
+    </div>
   ));

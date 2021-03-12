@@ -2,9 +2,12 @@ import React from "react";
 
 import styles from "./styles.module.scss";
 
-const Border = ({ children, width, height }) => {
+const Border = ({ children, borderWidth, borderImageOutset }) => {
   return (
-    <div style={{ width: width, height: height }} className={styles.border}>
+    <div
+      style={{ borderImageWidth: borderWidth, borderImageOutset: borderImageOutset }}
+      className={styles.border}
+    >
       {children}
     </div>
   );
