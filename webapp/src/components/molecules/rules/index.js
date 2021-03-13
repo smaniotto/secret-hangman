@@ -1,6 +1,6 @@
 import React from "react";
 
-import Popup from "components/atoms/popup";
+import Popup from "components/molecules/popup";
 import Button from "components/atoms/button";
 
 import styles from "./styles.module.scss";

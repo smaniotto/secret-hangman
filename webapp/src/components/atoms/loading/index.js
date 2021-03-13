@@ -1,6 +1,6 @@
 import React from "react";
 
-import Popup from "../popup";
+import Popup from "components/molecules/popup";
 import loading from "./loading.svg";
 
 import styles from "./styles.module.scss";
