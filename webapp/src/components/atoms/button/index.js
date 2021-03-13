@@ -4,7 +4,7 @@ import Border from "../border";
 
 import styles from "./styles.module.scss";
 
-const Button = ({ children, className, onClick, borderWidth, paddingInPixels = [5, 10] }) => {
+const Button = ({ children, className, onClick, borderWidth, paddingInPixels = [3, 6] }) => {
   return (
     <button
       className={`${styles.button} ${className}`}
