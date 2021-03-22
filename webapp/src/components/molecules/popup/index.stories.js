@@ -5,22 +5,24 @@ import Popup from ".";
 
 storiesOf("Popup", module)
   .add("Alert", () => (
-    <Popup>
+    <Popup width={150}>
       <div>
-        <h2 style={{ color: "red" }}>Danger</h2>
-        <p>You have only ONE more mistake left!</p>
+        <h2 style={{ color: "red" }}>Watch out</h2>
+        <p>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolor eum maiores odit, fugit
+          natus repellat odio tempore sit?
+        </p>
       </div>
     </Popup>
   ))
   .add("Win", () => (
-    <Popup borderWidth={"1.2rem"}>
+    <Popup width={400}>
       <div
         style={{
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          width: "200px",
         }}
       >
         <h2 style={{ color: "green" }}>You Win!</h2>
@@ -29,6 +31,25 @@ storiesOf("Popup", module)
           natus repellat odio tempore sit? Doloribus sint totam voluptatem quidem facilis cumque
           consectetur cum quasi ab voluptate!
         </p>
+      </div>
+    </Popup>
+  ))
+  .add("Dramatic Alert", () => (
+    <Popup width={600} borderWidth={10}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <h1 style={{ color: "red" }}>ATTENTION</h1>
+        <h3>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolor eum maiores odit, fugit
+          natus repellat odio tempore sit? Doloribus sint totam voluptatem quidem facilis cumque
+          consectetur cum quasi ab voluptate!
+        </h3>
       </div>
     </Popup>
   ));

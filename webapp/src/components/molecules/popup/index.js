@@ -5,24 +5,32 @@ import closeIcon from "./close-icon.png";
 
 import styles from "./styles.module.scss";
 
-const Popup = ({ borderWidth, children, handleClosePopup, paddingInPixels = [10, 10], top }) => {
+const Popup = ({
+  children,
+  handleClosePopup,
+  width = 200,
+  borderWidth = 4.5 + width / 300,
+  padding = 10,
+}) => {
   return (
     <div className={styles.outterContainer}>
-      <div
-        className={styles.innerContainer}
-        style={{ padding: `${paddingInPixels[0]}px ${paddingInPixels[1]}px`, top: top }}
-      >
-        <img
-          src={closeIcon}
-          alt="Close Icon"
-          className={styles.closeIcon}
-          onClick={handleClosePopup}
-        />
-        <Border
-          borderWidth={borderWidth}
-          borderImageOutset={`${paddingInPixels[0] + 1}px ${paddingInPixels[1] + 1}px`}
-        >
-          {children}
+      <div>
+        <Border borderWidth={borderWidth}>
+          <div
+            className={styles.innerContainer}
+            style={{
+              width: width ? `${width}px` : "auto",
+              padding: `${padding}px`,
+            }}
+          >
+            <img
+              src={closeIcon}
+              alt="Close Icon"
+              className={styles.closeIcon}
+              onClick={handleClosePopup}
+            />
+            {children}
+          </div>
         </Border>
       </div>
     </div>

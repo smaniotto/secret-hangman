@@ -6,7 +6,6 @@
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  padding: 40px;
   z-index: 9;
 }
 
@@ -30,12 +29,5 @@
 .button {
   background-color: transparent;
   border: none;
-  color: $color-secondary;
-  font-family: $font-default;
   font-size: 1.2rem;
-}
-
-.button:hover {
-  background-color: $color-secondary;
-  color: $color-primary;
 }

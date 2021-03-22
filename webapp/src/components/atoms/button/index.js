@@ -4,20 +4,28 @@ import Border from "../border";
 
 import styles from "./styles.module.scss";
 
-const Button = ({ children, className, onClick, borderWidth, paddingInPixels = [3, 6] }) => {
+const Button = (props) => {
+  const { children, className, onClick, borderWidth, padding = 3, width, height, style } = props;
+
+  const paddingButton = `${padding}px ${padding * 2}px`;
+
   return (
-    <button
-      className={`${styles.button} ${className}`}
-      style={{ padding: `${paddingInPixels[0]}px ${paddingInPixels[1]}px` }}
-      onClick={onClick}
-    >
-      <Border
-        borderWidth={borderWidth}
-        borderImageOutset={`${paddingInPixels[0] + 1}px ${paddingInPixels[1] + 1}px`}
+    <>
+      <button
+        className={`${styles.button} ${className}`}
+        onClick={onClick}
+        style={{ height: `${height}px`, width: `${width}px` }}
       >
-        {children}
-      </Border>
-    </button>
+        <Border
+          borderWidth={borderWidth}
+          padding={paddingButton}
+          className={styles.borderButton}
+          style={style}
+        >
+          {children}
+        </Border>
+      </button>
+    </>
   );
 };
 

@@ -1,16 +1,15 @@
-.border {
+@import "styles/variables";
+
+.container {
   align-items: center;
   background-color: inherit;
-  border-image-slice: 21;
-  border-image-source: url("./border.svg");
-  border-image-width: 10px;
+  border: 2px solid $color-secondary;
   border-style: solid;
-  border-width: 1px;
-  color: inherit;
+  color: $color-secondary;
   display: flex;
-  justify-content: center;
-  width: inherit;
   height: inherit;
+  justify-content: center;
+  margin: 0;
   padding: inherit;
-  margin: inherit;
+  width: inherit;
 }

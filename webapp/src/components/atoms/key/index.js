@@ -6,15 +6,20 @@ import Button from "../button";
 import styles from "./styles.module.scss";
 
 const Key = ({ letter, disabled = false, used, onClick }) => {
-  const disabledContainer =
-    disabled || used ? `${styles.container} ${styles.disabled}` : styles.container;
+  const disabledStyle = (disabled || used) && {
+    backgroundColor: "transparent",
+    color: "#fff",
+    cursor: "default",
+  };
 
   return (
     <Button
-      className={disabledContainer}
+      className={styles.container}
       onClick={onClick}
-      borderWidth={"20px"}
-      paddingInPixels={[0, 7]}
+      borderWidth={2}
+      height={50}
+      width={50}
+      style={disabledStyle}
     >
       {used && <img src={keyUsed} alt="Used key" className={styles.used} />}
 

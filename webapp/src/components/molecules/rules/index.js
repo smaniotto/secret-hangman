@@ -7,7 +7,7 @@ import styles from "./styles.module.scss";
 
 const Rules = ({ closeRules }) => {
   return (
-    <Popup size="large">
+    <Popup width={300} borderWidth={7} padding={20}>
       <div className={styles.container}>
         <h1 className={styles.title}>scrt.hangman</h1>
         <h3 className={styles.subtitle}>How to play</h3>
@@ -17,7 +17,7 @@ const Rules = ({ closeRules }) => {
           <li>3. Authorize the fee for each try.</li>
           <li>4. If you find out the word before making 6 mistakes, you win.</li>
         </ul>
-        <Button className={styles.button} onClick={closeRules}>
+        <Button className={styles.button} onClick={closeRules} borderWidth={1.4}>
           Play
         </Button>
       </div>
