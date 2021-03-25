@@ -4,8 +4,8 @@ import { storiesOf } from "@storybook/react";
 import Popup from ".";
 
 storiesOf("Popup", module)
-  .add("Alert", () => (
-    <Popup width={150}>
+  .add("Default", () => (
+    <Popup>
       <div>
         <h2 style={{ color: "red" }}>Watch out</h2>
         <p>
@@ -15,8 +15,8 @@ storiesOf("Popup", module)
       </div>
     </Popup>
   ))
-  .add("Win", () => (
-    <Popup width={400}>
+  .add("Centered Content", () => (
+    <Popup>
       <div
         style={{
           display: "flex",
@@ -34,8 +34,8 @@ storiesOf("Popup", module)
       </div>
     </Popup>
   ))
-  .add("Dramatic Alert", () => (
-    <Popup width={600} borderWidth={10}>
+  .add("Small", () => (
+    <Popup size={"small"}>
       <div
         style={{
           display: "flex",
@@ -44,12 +44,8 @@ storiesOf("Popup", module)
           justifyContent: "center",
         }}
       >
-        <h1 style={{ color: "red" }}>ATTENTION</h1>
-        <h3>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolor eum maiores odit, fugit
-          natus repellat odio tempore sit? Doloribus sint totam voluptatem quidem facilis cumque
-          consectetur cum quasi ab voluptate!
-        </h3>
+        <h2 style={{ color: "lightblue" }}>Reminder</h2>
+        <h3>Lorem ipsum dolor sit amet consectetur adipisicing elit.</h3>
       </div>
     </Popup>
   ));

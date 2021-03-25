@@ -5,32 +5,25 @@ import closeIcon from "./close-icon.png";
 
 import styles from "./styles.module.scss";
 
-const Popup = ({
-  children,
-  handleClosePopup,
-  width = 200,
-  borderWidth = 4.5 + width / 300,
-  padding = 10,
-}) => {
+const Popup = ({ children, className, handleClosePopup, size = "large" }) => {
+  const innerContainer =
+    size === "large"
+      ? styles.innerContainer
+      : `${styles.innerContainer} ${styles.innerContainerSmall}`;
+
+  const borderWidth = size === "large" ? 4.5 : 3;
+
   return (
     <div className={styles.outterContainer}>
-      <div>
-        <Border borderWidth={borderWidth}>
-          <div
-            className={styles.innerContainer}
-            style={{
-              width: width ? `${width}px` : "auto",
-              padding: `${padding}px`,
-            }}
-          >
-            <img
-              src={closeIcon}
-              alt="Close Icon"
-              className={styles.closeIcon}
-              onClick={handleClosePopup}
-            />
-            {children}
-          </div>
+      <div className={`${innerContainer} ${className}`}>
+        <Border borderWidth={borderWidth} className={styles.border}>
+          <img
+            src={closeIcon}
+            alt="Close Icon"
+            className={styles.closeIcon}
+            onClick={handleClosePopup}
+          />
+          {children}
         </Border>
       </div>
     </div>

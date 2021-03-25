@@ -2,14 +2,11 @@
 
 .container {
   align-items: center;
-  background-color: inherit;
+  background-color: transparent;
   border: 2px solid $color-secondary;
   border-style: solid;
-  color: $color-secondary;
+  color: inherit;
   display: flex;
   height: inherit;
   justify-content: center;
-  margin: 0;
-  padding: inherit;
-  width: inherit;
 }

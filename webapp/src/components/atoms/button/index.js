@@ -5,23 +5,12 @@ import Border from "../border";
 import styles from "./styles.module.scss";
 
 const Button = (props) => {
-  const { children, className, onClick, borderWidth, padding = 3, width, height, style } = props;
-
-  const paddingButton = `${padding}px ${padding * 2}px`;
+  const { children, className, onClick, borderWidth = 2 } = props;
 
   return (
     <>
-      <button
-        className={`${styles.button} ${className}`}
-        onClick={onClick}
-        style={{ height: `${height}px`, width: `${width}px` }}
-      >
-        <Border
-          borderWidth={borderWidth}
-          padding={paddingButton}
-          className={styles.borderButton}
-          style={style}
-        >
+      <button className={styles.button} onClick={onClick}>
+        <Border borderWidth={borderWidth} className={`${styles.border} ${className}`}>
           {children}
         </Border>
       </button>

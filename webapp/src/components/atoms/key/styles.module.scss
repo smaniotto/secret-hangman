@@ -3,22 +3,25 @@
 .container {
   align-items: center;
   display: flex;
-  height: auto;
+  height: 50px;
   justify-content: center;
   position: relative;
-  width: auto;
+  width: 50px;
+}
+
+.disabledContainer:hover {
+  background-color: white;
+  color: white;
 }
 
 .used {
   position: absolute;
   transition: all 0.1s ease-in-out;
-  width: 100%;
-  z-index: 99;
+  width: 50px;
+  z-index: 2;
 }
 
 .text {
-  color: inherit;
   font-size: 2.5rem;
   transform: translateY(-2px);
-  z-index: 9;
 }
