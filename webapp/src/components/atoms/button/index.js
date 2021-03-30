@@ -11,7 +11,7 @@ const Button = (props) => {
 
   return (
     <Border borderWidth={borderWidth} className={`${styles.border} ${disabledStyle} ${className}`}>
-      <button className={`${styles.button}`} onClick={onClick}>
+      <button className={styles.button} onClick={onClick}>
         {children}
       </button>
     </Border>
