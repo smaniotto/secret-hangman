@@ -9,28 +9,29 @@
   font-family: $font-default;
   justify-content: center;
   margin: 0;
-  padding: 0;
+  padding: 3px 6px;
 }
 
-.border {
-  color: $color-secondary;
-  background-color: $color-primary;
-  padding: 3px 6px;
-  width: inherit;
+.border:hover {
+  background-color: $color-secondary;
 }
 
 .button:hover {
-  .border {
-    background-color: $color-secondary;
-    color: $color-primary;
-    cursor: pointer;
-  }
-
-  .button {
-    color: $color-primary;
-  }
+  color: $color-primary;
+  cursor: pointer;
 }
 
 .button:focus {
   outline: none;
+}
+
+.disabled:hover {
+  background-color: transparent;
+  cursor: default;
+  opacity: 0.3;
+  color: $color-secondary;
+
+  .border {
+    background-color: transparent;
+  }
 }

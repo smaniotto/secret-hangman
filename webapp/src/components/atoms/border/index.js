@@ -6,7 +6,7 @@ const Border = ({ children, borderWidth = 2, className }) => {
   const borderRadiusA = borderWidth * 160;
   const borderRadiusB = borderWidth * 1.5 + 18;
   return (
-    <div
+    <span
       style={{
         borderWidth: `${borderWidth}px`,
         borderRadius: `${borderRadiusA}px ${borderRadiusB}px ${borderRadiusA}px ${borderRadiusB}px/
@@ -15,7 +15,7 @@ const Border = ({ children, borderWidth = 2, className }) => {
       className={`${styles.container} ${className}`}
     >
       {children}
-    </div>
+    </span>
   );
 };
 

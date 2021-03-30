@@ -6,11 +6,8 @@ import Button from "../button";
 import styles from "./styles.module.scss";
 
 const Key = ({ letter, disabled = false, used = false, onClick }) => {
-  const containerStyle =
-    disabled || used ? `${styles.container} ${styles.disabledContainer}` : styles.container;
-
   return (
-    <Button className={containerStyle} onClick={onClick}>
+    <Button className={styles.container} onClick={onClick} disabled={disabled || used}>
       {used && <img src={keyUsed} alt="Used key" className={styles.used} />}
       <p className={styles.text}>{letter}</p>
     </Button>

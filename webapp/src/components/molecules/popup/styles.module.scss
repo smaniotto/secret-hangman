@@ -16,6 +16,7 @@
 .innerContainer {
   background-color: rgba(0, 0, 0, 0.9);
   color: $color-secondary;
+  margin: 0.8rem;
   position: relative;
   width: 300px;
 }
@@ -24,15 +25,11 @@
   width: 150px;
 }
 
-.border {
-  padding: 10px;
-}
-
 .closeIcon {
   position: absolute;
-  right: 10px;
-  top: 10px;
-  width: 10px;
+  right: 0;
+  top: 0;
+  width: 0.5rem;
 }
 
 .closeIcon:hover {

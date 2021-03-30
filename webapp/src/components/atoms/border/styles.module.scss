@@ -5,8 +5,9 @@
   background-color: transparent;
   border: 2px solid $color-secondary;
   border-style: solid;
-  color: inherit;
+  color: $color-secondary;
   display: flex;
-  height: inherit;
+  height: fit-content;
   justify-content: center;
+  width: fit-content;
 }
