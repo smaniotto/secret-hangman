@@ -1,20 +1,16 @@
 import React from "react";
 
+import keyUsed from "./key-used.svg";
+import Button from "../button";
+
 import styles from "./styles.module.scss";
 
-import keyBorder from "./key-border.svg";
-import keyUsed from "./key-used.svg";
-
-const Key = ({ letter, disabled = false, used, onClick }) => {
-  const disabledContainer = `${styles.disabled} ${styles.container}`;
-  const style = !disabled ? styles.container : disabledContainer;
-
+const Key = ({ letter, disabled = false, used = false, onClick }) => {
   return (
-    <div className={style} onClick={onClick}>
+    <Button className={styles.container} onClick={onClick} disabled={disabled || used}>
       {used && <img src={keyUsed} alt="Used key" className={styles.used} />}
-      <img src={keyBorder} alt="Key" className={styles.border} />
       <p className={styles.text}>{letter}</p>
-    </div>
+    </Button>
   );
 };
 

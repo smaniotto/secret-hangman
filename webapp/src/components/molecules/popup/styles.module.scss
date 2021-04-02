@@ -1,4 +1,6 @@
-.container {
+@import "styles/variables";
+
+.outterContainer {
   align-items: center;
   background-color: rgba(0, 0, 0, 0.7);
   display: flex;
@@ -11,25 +13,26 @@
   z-index: 9999;
 }
 
-.borderContainer {
-  align-items: center;
+.innerContainer {
   background-color: rgba(0, 0, 0, 0.9);
-  display: flex;
-  flex-direction: column;
-  height: 110px;
-  justify-content: center;
-  padding: 5px;
+  color: $color-secondary;
+  margin: 0.8rem;
   position: relative;
-  width: 200px;
+  width: 300px;
 }
 
-.borderContainerLarge {
-  width: 350px;
-  height: 330px;
+.innerContainerSmall {
+  width: 150px;
 }
 
-.border {
-  left: 0;
+.closeIcon {
   position: absolute;
+  right: 0;
   top: 0;
+  width: 0.5rem;
+}
+
+.closeIcon:hover {
+  cursor: pointer;
+  opacity: 0.5;
 }

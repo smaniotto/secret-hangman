@@ -3,4 +3,4 @@ import { storiesOf } from "@storybook/react";
 
 import KeplrConnectButton from ".";
 
-storiesOf("Default", module).add("Default", () => <KeplrConnectButton />);
+storiesOf("KeplrConnectButton", module).add("Default", () => <KeplrConnectButton />);

@@ -1,7 +1,37 @@
+@import "styles/variables";
+
+.button {
+  align-items: center;
+  background-color: transparent;
+  border: none;
+  color: $color-secondary;
+  display: flex;
+  font-family: $font-default;
+  justify-content: center;
+  margin: 0;
+  padding: 3px 6px;
+}
+
+.border:hover {
+  background-color: $color-secondary;
+}
+
 .button:hover {
+  color: $color-primary;
   cursor: pointer;
 }
 
 .button:focus {
   outline: none;
+}
+
+.disabled:hover {
+  background-color: transparent;
+  cursor: default;
+  opacity: 0.3;
+  color: $color-secondary;
+
+  .border {
+    background-color: transparent;
+  }
 }
